@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+			<title>Finn vs.Fern</title>
+		</meta>
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no">
+			<link rel="stylesheet"
+				href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+				integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+				crossorigin="anonymous"></link>
+			<link rel="stylesheet" href="style.css" type="text/css"></link>
+
+		</meta>
+	</head>
+	<body>
+
+		<div class="row" id="header">
+			<div class="offset-3"></div>
+			<h1> Finn vs. Fern Game</h1>
+		</div>
+
+		<div class="row" id="buttonRow">
+			<div class="offset-3"></div>
+			<div class="col-6">
+				<button type="button" class="btn btn-primary" id="rules">Rules</button>
+				<button onclick="musicOn()" type="button"
+					class="btn btn-primary" id="musicOn">Music On</button>
+				<button onclick="musicOff()" type="button"
+					class="btn btn-primary" id="musicOff">Music Off</button>
+			</div>
+		</div>
+		<audio id="soundtrack">
+			<source src="soundtrack.mp3" type="audio/mpeg">
+		</audio>
+
+		<div class="container-fluid">
+			<div class="row" id="main">
+				<div class="col-3" id="finn">
+					<div class="row justify-content-center">
+						<h2 class="">Finn</h2>
+					</div>
+					<div class="row">
+						<div class="container">
+							<img src="finn_default.png"></img>
+						</div>
+					</div>
+				</div>
+				<div class="col-6">
+					<canvas id="board" width="600" height="600"></canvas>
+
+				</div>
+				<div class="col-3" id="fern">
+					<div class="row justify-content-center">
+						<h2>Fern</h2>
+					</div>
+					<div class="row">
+						<div class="container">
+							<img src="fern_default.png"></img>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+			integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+			crossorigin="anonymous"></script>
+		<script src="script.js"></script>
+	</body>
+</html>
