@@ -1,52 +1,58 @@
-	@font-face {
-		font-family: Adventure Time;
-		src: url(Adventure_Time.ttf);
-	}
-	
-	#header {
-		text-align: center;
-		padding: 20px;
-		background-image: url("mood.png");
-		min-height: 200px;
-		
-		
-	}
-	
-	h1 {
-		font-family: Adventure Time;
-		font-size: 60px;
-		padding-top: 50px;
-		color: #da4244;
-		text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
-	}
-	
-	
-	#main {
-		min-height: 900px;
-	}
-	
-	#buttonRow {
-		min-height: 50px;
-		text-align: center;
-		padding-top: 10px;
-		padding-bottom: 10px;
-		background-color: #E6F4F1;
-	}
-	
-	.btn-primary {
-		margin-left: 20px;
-	}
-	
+@font-face {
+	font-family: Adventure Time;
+	src: url(Adventure_Time.ttf);
+}
 
-	#finn {
-		background-color: white;
-	}
-	
-	#board {
-		background-color: #ff7d7d;
-	}
-	
-	#fern {
-		background-color: white;
-	}
-	
+#header {
+	text-align: center;
+	padding: 20px;
+	background-image: url("mood.png");
+	min-height: 200px;
+}
+
+h1 {
+	font-family: Adventure Time;
+	font-size: 60px;
+	padding-top: 50px;
+	color: #da4244;
+	text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+}
+
+#main {
+	min-height: 900px;
+}
+
+#buttonRow {
+	min-height: 50px;
+	text-align: center;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	background-color: #E6F4F1;
+}
+
+.btn-primary {
+	margin-left: 20px;
+}
+
+#character {
+	min-height: 340px;
+}
+
+#finn {
+	background-color: white;
+}
+
+.progress {
+	height: 30px;
+	width: 200px;
+	margin: 30px 50px;
+}
+
+#board {
+	background-color: white;
+}
+
+#fern {
+	background-color: white;
+}
