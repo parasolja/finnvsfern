@@ -28,7 +28,7 @@
 				<button onclick="musicOn()" type="button"
 					class="btn btn-primary" id="musicOn">Music On</button>
 				<audio id="soundtrack">
-					<source src="soundtrack.mp3" type="audio/mpeg">
+					<source src="soundtrack.mp3" type="audio/mpeg"></source>
 				</audio>
 				<button onclick="musicOff()" type="button"
 					class="btn btn-primary" id="musicOff">Music Off</button>
@@ -43,13 +43,15 @@
 					</div>
 					<div class="row">
 						<div class="container" id="character">
-							<img src="finn_default.png"></img>
+							<img src="pics/finn_default.png"></img>
 						</div>
 					</div>
 					<div class="row">
 						<div class="progress">
-							<div id="healthFinn" class="progress-bar progress-bar-striped bg-success" role="progressbar"
-							 style="width: 100%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">100%</div>
+							<div id="healthFinn"
+								class="progress-bar progress-bar-striped bg-success"
+								role="progressbar" style="width: 100%" aria-valuenow="50"
+								aria-valuemin="0" aria-valuemax="100">100%</div>
 						</div>
 					</div>
 				</div>
@@ -63,20 +65,34 @@
 					</div>
 					<div class="row">
 						<div class="container" id="character">
-							<img src="fern_default.png"></img>
+							<img src="pics/fern_default.png"></img>
 						</div>
 					</div>
 					<div class="row">
 						<div class="progress">
-							<div id="healthFern" class="progress-bar progress-bar-striped bg-success" role="progressbar"
-							 style="width: 100%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">100%</div>
+							<div id="healthFern"
+								class="progress-bar progress-bar-striped bg-success"
+								role="progressbar" style="width: 100%" aria-valuenow="50"
+								aria-valuemin="0" aria-valuemax="100">100%</div>
 						</div>
 					</div>
 
 				</div>
 			</div>
 		</div>
-
+		<div class="d-none">
+			<img src="pics/finn_default.png" id="playerOne"></img>
+			<img src="pics/fern_default.png" id="playerTwo"></img>
+			<img src="pics/finn_weapon.png" id="playerOneArmed"></img>
+			<img src="pics/fern_weapon.png" id="playerTwoArmed"></img>
+			<img src="pics/finnsword.png" id="weaponOne"></img>
+			<img src="pics/grass.png" id="weaponTwo"></img>
+			<img src="pics/mbomb.png" id="bomb"></img>
+			<img src="pics/scarlet.png" id="sword"></img>
+			<img src="pics/demon.png" id="demonSword"></img>
+			<img src="pics/star.png" id="wand"></img>
+			<img src="pics/rock.png" id="obsticle"></img>
+		</div>
 		<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
 			integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
 			crossorigin="anonymous"></script>
