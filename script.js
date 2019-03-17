@@ -15,132 +15,165 @@ function musicOff() {
 
 //First draw a big rectangle using canvas
 
-var board = document.getElementById("board");
-var context = board.getContext("2d");
+var canvas = document.createElement("canvas");
+var ctx = canvas.getContext("2d");
+canvas.width = 600; 
+canvas.height = 600;
+var boardContainer = document.getElementById("boardContainer");
+boardContainer.appendChild(canvas);
 
-context.beginPath();
-context.rect(0, 0, 600, 600);
-context.fillStyle = '#e6f4f1';
-context.fill();
 
-//Add some border
-context.lineWidth = 2;
-context.strokeStyle = '#50a627';
-context.stroke();
+// Background image
+var bgReady = false;
+var bgImage = new Image();
+bgImage.onload = function () {
+	bgReady = true;
+};
+bgImage.src = "pics/background.png";
 
-//Create columns and rows inside of a big rectangle
- 
-class Layout {
-	constructor(columns,rows) {
-		this.columns = columns;
-		this.rows = rows;
-		this.value = [];
-	
-		for (var i = 0; i < this.rows; i++) {
-	        this.value[i] = []; 
-	        for (var j = 0; j < this.columns; j++) {   
-	            this.value[i][j] = 0; 
-	        }
-		}
+
+
+//hero1 image
+var hero1Ready = false;
+var hero1Image = new Image();
+hero1Image.onload = function () {
+	hero1Ready = true;
+};
+hero1Image.src = "pics/fernMini.png";
+
+// hero2 image
+var hero2Ready = false;
+var hero2Image = new Image();
+hero2Image.onload = function () {
+	hero2Ready = true;
+};
+hero2Image.src = "pics/finnMini.png";
+
+//Game objects
+var hero1 = {
+	speed: 256 // movement in pixels per second, likely irrelevant
+	// weapons
+};
+var hero2 = {
+		
+};
+var hero2sCaught = 0;
+
+// Handle keyboard controls
+var keysDown = {};
+
+addEventListener("keydown", function (e) {
+	keysDown[e.keyCode] = true;
+}, false);
+
+addEventListener("keyup", function (e) {
+	delete keysDown[e.keyCode];
+}, false);
+
+// Reset the game when the player catches a hero2
+var reset = function () {
+	// Throw the hero1 somewhere on the screen randomly
+	hero1.x = 32 + (Math.random() * (canvas.width - 64));
+	hero1.y = 32 + (Math.random() * (canvas.height - 64));
+
+	// Throw the hero2 somewhere on the screen randomly
+	hero2.x = 32 + (Math.random() * (canvas.width - 64));
+	hero2.y = 32 + (Math.random() * (canvas.height - 64));
+};
+
+// Update game objects
+var update = function (modifier) {
+	// hero1
+	if (38 in keysDown) { // Player holding up
+		hero1.y -= 4;
+		
+	} else if (40 in keysDown) { // Player holding down
+		hero1.y += 4;
+	} else if (37 in keysDown) { // Player holding left
+		hero1.x -= 4;
+		// flip horizontally
+//		ctx.translate(hero1Image.width, 0);
+//		ctx.scale(-1, 1);
+//		this.ctx.drawImage(hero1Image, 0, 0);
+	} else if (39 in keysDown) { // Player holding right
+		hero1.x += 4;
+		// flip horizontally
+//		ctx.translate(hero1Image.width, 0);
+//		ctx.scale(-1, 1);
+//		this.ctx.drawImage(hero1Image, 0, 0);
 	}
 
-	//add some random numbers to boxes
-	getRandom () {
-        for (var i = 0; i < this.rows; i++) {
-            for (var j = 0; j < this.columns; j++) {
-                this.value[i][j] = Math.floor(Math.random() * Math.floor(10)); 
-            }
-        }
-    }  
-}
-
-//Finally create a board and add random values
-
-var board = new Layout (10,10);
-board.getRandom();
-
-//Declare variables for a board (only for squares)
-
-var whiteSquare;
-var whiteSquares = []; //store them all together
-var obsSquare;
-var obsSquares = [];
-var squareSize = 60;
-
-//Create class for squares
-class Square {
-	constructor(row,col) {
-        this.row = row;
-        this.col = col;
-    }
-
-    squareCreate() {
-        context.beginPath();
-        context.rect( this.col * 60, this.row * 60, squareSize, squareSize);  
-    }
-}
-
-//create grid
-
-for (var row = 0; row < board.rows; row++) {
-    
-    for (var col = 0; col < board.columns; col++) {
-    
-        // if box status equals 2, place black box, set box value to 1 (unavailable)
-        if (board.value[row][col] === 2 || board.value[row][col] === 3) {
-
-        	obsSquare = new Square(row, col);
-        	obsSquare.squareCreate();
-            context.fillStyle = '#0099cb';
-            context.fill();
-            board.value[row][col] = 1;
-
-            obsSquares.push(obsSquare); // push all black/unavaiable boxes onto blackBoxes array
-        
-    	} else if (board.value[row][col] === 5) { // place something else
-        
-	      	obsSquare = new Square(row, col);
-	    	obsSquare.squareCreate();
-	        context.fillStyle = 'yellow';
-	        context.fill();
-	        board.value[row][col] = 3;
-        
-    	} else { //else place grey box, set box value to 0 (available)
-            
-            whiteSquare = new Square(row, col);
-            whiteSquare.squareCreate();
-            context.fillStyle = 'white';
-            context.fill();
-            context.stroke();
-            board.value[row][col] = 0;
-
-            whiteSquares.push(whiteSquare); // push all grey/available boxes onto greyBoxes array
-        }  
-    }    
-}
-console.table(board.value);
-
-
-//Define players and weapons
-
-var objects = {
-
-	    players: 
-	    [
-	        new Player(document.getElementById("playerOne"), "Finn", 1, 100, 10), 
-	        new Player(document.getElementById("playerTwo"), "Fern", 2, 100, 10),
-	    ],
-	    weapons: 
-	    [
-	        new Weapon(document.getElementById("weaponOne"), 20, 3, "Finns Sword"), 
-	        new Weapon(document.getElementById("weaonTwo"), 20, 4, 'Ferns Sword'), 
-	        new Weapon(document.getElementById("bomb"), 35, 5, "Mushroom Bomb"), 
-	        new Weapon(document.getElementById("sword"), 20, 6, "Scarlet"), 
-	        new Weapon(document.getElementById("demonSword"), 25, 7, "Demon Sword"),
-	        new Weapon(document.getElementById("wand"), 15, 8, 'Magic Wand') 
-	        
-	    ]
+	// hero2
+	if (87 in keysDown) { // Player holding up
+		hero2.y -= 4;
+	} else if (83 in keysDown) { // Player holding down
+		hero2.y += 4;
+	} else if (65 in keysDown) { // Player holding left
+		hero2.x -= 4;
+	} else if (68 in keysDown) { // Player holding right
+		hero2.x += 4;
 	}
+
+
+	// Are they touching?
+	// transform into one hero is touching weapon
+	if (
+		hero1.x <= (hero2.x + 32)
+		&& hero2.x <= (hero1.x + 32)
+		&& hero1.y <= (hero2.y + 32)
+		&& hero2.y <= (hero1.y + 32)
+	) {
+		// make weapon disappear and give it to hero
+
+		//++hero2sCaught;
+		//reset();
+	}
+};
+
+// Draw everything
+var render = function () {
+	if (bgReady) {
+		ctx.drawImage(bgImage, 0, 0);
+	}
+
+	if (hero1Ready) {
+		ctx.drawImage(hero1Image, hero1.x, hero1.y);
+	}
+
+	if (hero2Ready) {
+		ctx.drawImage(hero2Image, hero2.x, hero2.y);
+	}
+
+	// Score
+	ctx.fillStyle = "rgb(250, 250, 250)";
+	ctx.font = "24px Helvetica";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "top";
+	ctx.fillText("Some Game Stats: " + hero2sCaught, 32, 32);
+};
+
+// The main game loop
+var main = function () {
+	var now = Date.now();
+	var delta = now - then;
+
+	update(delta / 1000);
+	render();
+
+	then = now;
+
+	// Request to do this again ASAP
+	requestAnimationFrame(main);
+};
+
+// Cross-browser support for requestAnimationFrame
+var w = window;
+requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
+
+// Let's play this game!
+var then = Date.now();
+reset();
+main();
 
 
 
