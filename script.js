@@ -10,8 +10,6 @@ function musicOff() {
   x.pause(); 
 } 
 
-
-
 //First draw a big rectangle using canvas
 
 var canvas = document.createElement("canvas");
@@ -92,6 +90,7 @@ hero2Image.onload = function () {
 hero2Image.src = "pics/finnMini.png";
 
 //rock/obstacle image
+
 var rockReady = false;
 var rockImage = new Image();
 rockImage.onload = function () {
@@ -111,7 +110,7 @@ var hero2sCaught = 0;
 
 var rocks = [];
 
-// Handle keyboard controls
+//Handle keyboard controls
 var keysDown = {};
 
 addEventListener("keydown", function (e) {
@@ -121,11 +120,12 @@ addEventListener("keydown", function (e) {
 addEventListener("keyup", function (e) {
 	delete keysDown[e.keyCode];
 }, false);
+// Limit Moves
 
+var map = new Matrix(10,10); // create map
 // Reset the game, place heros and obstacles
 var reset = function () {
 
-	var map = new Matrix(10,10); // create map
 	map.randomize(); // fill map with random values
 
 	// create obstacles
@@ -177,56 +177,110 @@ var reset = function () {
     contentBoxes.push(contentBox); 
 	
 };
+
+
+//Update game objects
+
+
+//check every barrier for collisions
+
+
+// if the move is allowed, return the desiredPlayer position
+// if the move is not allowed, return the old player position
+
+
+
+
 //var playerOnesTurn = false;
 // Update game objects
+var steps = 0;
 var update = function (modifier) {
 	// hero1
 //	if(playerOnesTurn) {
+	const walkingSpeed = 60;
 		if (38 in keysDown) { // Player holding up
-			hero1.y -= 4;
+			if(checkMoveAllowed()) {
+				hero1.y -= walkingSpeed;
+				steps++;
+			} else {
+				hero1.y += walkingSpeed;
+			}
+			delete keysDown[38];
+			// moveCounter++
 		} else if (40 in keysDown) { // Player holding down
-			hero1.y += 4;
+			if(checkMoveAllowed()) {
+				hero1.y += walkingSpeed;
+				steps++;
+			} else {
+				hero1.y -= walkingSpeed;
+			}
+			delete keysDown[40];
 		} else if (37 in keysDown) { // Player holding left
-			hero1.x -= 4;
-			// flip horizontally
-//		ctx.translate(hero1Image.width, 0);
-//		ctx.scale(-1, 1);
-//		this.ctx.drawImage(hero1Image, 0, 0);
+			if(checkMoveAllowed()) {
+				hero1.x -= walkingSpeed;
+				steps++;
+			} else {
+				hero1.x += walkingSpeed;
+			}
+			delete keysDown[37];
 		} else if (39 in keysDown) { // Player holding right
-			hero1.x += 4;
-			// flip horizontally
-//		ctx.translate(hero1Image.width, 0);
-//		ctx.scale(-1, 1);
-//		this.ctx.drawImage(hero1Image, 0, 0);
+			if(checkMoveAllowed()) {
+				hero1.x += walkingSpeed;
+				steps++;
+			} else {
+				hero1.x -= walkingSpeed;
+			}
+			delete keysDown[39];
 		}
 //	} else {
 		// hero2
 		if (87 in keysDown) { // Player holding up
-			hero2.y -= 4;
+			hero2.y -= walkingSpeed;
+			delete keysDown[87];
 		} else if (83 in keysDown) { // Player holding down
-			hero2.y += 4;
+			hero2.y += walkingSpeed;
+			delete keysDown[83];
 		} else if (65 in keysDown) { // Player holding left
-			hero2.x -= 4;
+			hero2.x -= walkingSpeed;
+			delete keysDown[65];
 		} else if (68 in keysDown) { // Player holding right
-			hero2.x += 4;
+			hero2.x += walkingSpeed;
+			delete keysDown[68];
 		}
 //	}
-
-
+	
 	// Are they touching?
 	// transform into one hero is touching weapon
-	if (
-		hero1.x <= (hero2.x + 32)
-		&& hero2.x <= (hero1.x + 32)
-		&& hero1.y <= (hero2.y + 32)
-		&& hero2.y <= (hero1.y + 32)
-	) {
+	
+		// for each box
+		
+		// if hero touches box
+		
+	 {
 		// make weapon disappear and give it to hero
 
 		//++hero2sCaught;
 		//reset();
 	}
 };
+
+function checkMoveAllowed() {
+	var moveAllowed = true;
+	rocks.forEach(
+			rock => {
+				var heroTouchesTopBlock = 
+					hero1.x <= (rock.x + 48)
+					&& rock.x <= (hero1.x + 48)
+					&& hero1.y <= (rock.y + 48)
+					&& rock.y <= (hero1.y + 48);
+				
+				if (heroTouchesTopBlock) {
+					moveAllowed = false;
+				}
+			}
+		);
+	return moveAllowed;
+}
 
 // Draw everything
 var render = function () {
@@ -258,13 +312,13 @@ var render = function () {
 //	} else {
 //		ctx.fillText("It's Ferns turn: " + hero2sCaught, 32, 32);
 //	}
+		ctx.fillText("steps: " + steps, 32, 64);	
 };
 
 // The main game loop
 var main = function () {
 	var now = Date.now();
 	var delta = now - then;
-
 	update(delta / 1000);
 	render();
 
