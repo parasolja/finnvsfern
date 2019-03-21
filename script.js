@@ -1,4 +1,6 @@
-//Music On/Off
+/**
+ * Ambient
+ */
 
 var x = document.getElementById("soundtrack"); 
 
@@ -10,7 +12,9 @@ function musicOff() {
   x.pause(); 
 } 
 
-//First draw a big rectangle using canvas
+/**
+ * World/Playingfield construction
+ */
 
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
@@ -24,6 +28,9 @@ ctx.rect(0, 0, 600, 600);
 ctx.fillStyle = 'green';
 ctx.fill();
 
+/**
+ * Matrix for numerical representations of game objects
+ */
 class Matrix {
     constructor(rows, cols) {
         this.rows = rows;
@@ -48,6 +55,13 @@ class Matrix {
     }  
 }
 
+
+//create map
+var map = new Matrix(10,10); 
+
+/**
+ * Box for one 60x60px area in the 10x10 boxes matrix
+ */
 class Box {
 	constructor (row,col) {
 		this.row = row;
@@ -60,6 +74,10 @@ class Box {
     }
 }
 
+var boxSize = 60; // 60x60 pixels in size
+var contentBox;
+var contentBoxes = [];
+
 // Background image
 var bgReady = false;
 var bgImage = new Image();
@@ -68,10 +86,271 @@ bgImage.onload = function () {
 };
 bgImage.src = "pics/field.jpg";
 
-//Create boxes/obstacles on canvas
-var boxSize = 60; // 60x60 pixels in size
-var contentBox;
-var contentBoxes = [];
+
+/**
+ * GAME OBJECTS
+ */
+
+/**
+ * Weapon Declarations
+ */
+
+class Weapon {
+	constructor (weaponId, name, damage) {
+		this.weaponId = weaponId;
+        this.name = name;
+        this.damage = damage;
+    }
+}
+
+var hands = new Weapon(null, "Hands", 10);
+var grass = new Weapon(70, "Grass Sword", 20);
+var finnSword = new Weapon(71, "Finn Sword", 20);
+var scarletSword = new Weapon(72, "Scarlet Sword", 20);
+var magicWand = new Weapon(73, "Magic Wand", 30);
+var mushBomb = new Weapon(74, "Mushroom Bomb", 40);
+var demonSword = new Weapon(75, "Demon Sword", 20);
+
+/**
+ * Weapon Images
+ */
+
+//Grass Sword
+var grassReady = false;
+var grassImage = new Image();
+grassImage.onload = function () {
+	grassReady = true;
+};
+grassImage.src = "pics/grass.png";
+
+//Finn Sword
+var finnSwordready = false;
+var finnSwordimage = new Image();
+finnSwordimage.onload = function () {
+	finnSwordready = true;
+};
+finnSwordimage.src = "pics/finnsword.png";
+
+//Scarlet Sword
+var scarletSwordready = false;
+var scarletSwordimage = new Image();
+scarletSwordimage.onload = function () {
+	scarletSwordready = true;
+};
+scarletSwordimage.src = "pics/scarlet.png";
+
+//Magic Wand
+var magicWandready = false;
+var magicWandimage = new Image();
+magicWandimage.onload = function () {
+	magicWandready = true;
+};
+magicWandimage.src = "pics/star.png";
+
+//Mushroom Bomb
+var mushBombready = false;
+var mushBombimage = new Image();
+mushBombimage.onload = function () {
+	mushBombready = true;
+};
+mushBombimage.src = "pics/mbomb.png";
+
+//Mushroom Bomb
+var demonSwordready = false;
+var demonSwordimage = new Image();
+demonSwordimage.onload = function () {
+	demonSwordready = true;
+};
+demonSwordimage.src = "pics/demon.png";
+
+
+/**
+ * Obstacle Declaration
+ */
+var rocks = []; 
+
+/**
+ * Obstacle Image
+ */
+
+var rockReady = false;
+var rockImage = new Image();
+rockImage.onload = function () {
+	rockReady = true;
+};
+rockImage.src = "pics/rock.png";
+
+/**
+ * Heroes Declarations
+ */
+class Hero1 {
+	constructor (x, y, health, damage, weapon) {
+		this.x = x;
+		this.y = y;
+		this.health = health;
+        this.weapon = weapon;
+        this.damage = weapon.damage;
+    }
+	
+	// getters
+	getCurrentPosition() {
+		return map.value[this.x/60][this.y/60];
+	}
+	
+	getPositionAbove() {
+		return map.value[this.x/60][(this.y/60)-1];
+	}
+	
+	getPositionBelow() {
+		return map.value[this.x/60][(this.y/60)+1];
+	}
+	
+	getPositionLeft() {
+		return map.value[(this.x/60)-1][this.y/60];
+	}
+
+	getPositionRight() {
+		return map.value[(this.x/60)+1][this.y/60];
+	}
+	
+	// setters
+	setCurrentPosition(value) {
+		map.value[this.x/60][this.y/60] = value;
+	}
+	
+	setPositionAbove(value) {
+		map.value[this.x/60][(this.y/60)-1] = value;
+	}
+	
+	setPositionBelow(value) {
+		map.value[this.x/60][(this.y/60)+1] = value;
+	}
+	
+	setPositionLeft(value) {
+		map.value[(this.x/60)-1][this.y/60] = value;
+	}
+
+	setPositionRight(value) {
+		map.value[(this.x/60)+1][this.y/60] = value;
+	}
+	
+	
+	updatePosition(x,y) {
+		this.x += x;
+		this.y += y;
+		if(x != 0 || y != 0) { // hero did a move 
+			this.setCurrentPosition(88);
+		}
+		if(x>0) { // hero moves right
+			this.setPositionLeft(1);
+		}
+		if(x<0) { // hero moves left
+			this.setPositionRight(1);
+		}
+		if(y<0) { // her moves up
+			this.setPositionBelow(1);
+		}
+		if(y>0) { // hero moves down
+			this.setPositionAbove(1);
+		}
+	}
+	
+	opponentInVicinity() {
+		return 	this.getPositionAbove() == 89 ||
+				this.getPositionBelow() == 89 ||
+				this.getPositionRight() == 89 ||
+				this.getPositionLeft() == 89;
+	}
+	
+}
+
+class Hero2 {
+	constructor (x, y, health, damage, weapon) {
+		this.x = x;
+		this.y = y;
+		this.health = health;
+        this.weapon = weapon;
+        this.damage = weapon.damage;
+    }
+	
+	// getters
+	getCurrentPosition() {
+		return map.value[this.x/60][this.y/60];
+	}
+	
+	getPositionAbove() {
+		return map.value[this.x/60][(this.y/60)-1];
+	}
+	
+	getPositionBelow() {
+		return map.value[this.x/60][(this.y/60)+1];
+	}
+	
+	getPositionLeft() {
+		return map.value[(this.x/60)-1][this.y/60];
+	}
+
+	getPositionRight() {
+		return map.value[(this.x/60)+1][this.y/60];
+	}
+	
+	// setters
+	setCurrentPosition(value) {
+		map.value[this.x/60][this.y/60] = value;
+	}
+	
+	setPositionAbove(value) {
+		map.value[this.x/60][(this.y/60)-1] = value;
+	}
+	
+	setPositionBelow(value) {
+		map.value[this.x/60][(this.y/60)+1] = value;
+	}
+	
+	setPositionLeft(value) {
+		map.value[(this.x/60)-1][this.y/60] = value;
+	}
+
+	setPositionRight(value) {
+		map.value[(this.x/60)+1][this.y/60] = value;
+	}
+	
+	
+	updatePosition(x,y) {
+		this.x += x;
+		this.y += y;
+		if(x != 0 || y != 0) { // hero did a move 
+			this.setCurrentPosition(89);
+		}
+		if(x>0) { // hero moves right
+			this.setPositionLeft(1);
+		}
+		if(x<0) { // hero moves left
+			this.setPositionRight(1);
+		}
+		if(y<0) { // her moves up
+			this.setPositionBelow(1);
+		}
+		if(y>0) { // hero moves down
+			this.setPositionAbove(1);
+		}
+	}
+	
+	opponentInVicinity() {
+		return 	this.getPositionAbove() == 88 ||
+				this.getPositionBelow() == 88 ||
+				this.getPositionRight() == 88 ||
+				this.getPositionLeft() == 88;
+	}
+	
+}
+
+var hero1 = new Hero1(0, 0, 100, 10, hands);
+var hero2 = new Hero2(0, 0, 100, 10, hands);
+
+/**
+ * Hero Images
+ */
 
 //hero1 image
 var hero1Ready = false;
@@ -89,28 +368,10 @@ hero2Image.onload = function () {
 };
 hero2Image.src = "pics/finnMini.png";
 
-//rock/obstacle image
 
-var rockReady = false;
-var rockImage = new Image();
-rockImage.onload = function () {
-	rockReady = true;
-};
-rockImage.src = "pics/rock.png";
-
-//Game objects
-var hero1 = {
-	speed: 256 // movement in pixels per second, likely irrelevant
-	// weapons
-};
-var hero2 = {
-		
-};
-var hero2sCaught = 0;
-
-var rocks = [];
-
-//Handle keyboard controls
+/**
+ * Handle keyboard controls
+ */
 var keysDown = {};
 
 addEventListener("keydown", function (e) {
@@ -120,13 +381,14 @@ addEventListener("keydown", function (e) {
 addEventListener("keyup", function (e) {
 	delete keysDown[e.keyCode];
 }, false);
-// Limit Moves
 
-var map = new Matrix(10,10); // create map
-// Reset the game, place heros and obstacles
+/**
+ * Reset/Create the game, place heros and obstacles
+ */ 
 var reset = function () {
 
-	map.randomize(); // fill map with random values
+	// fill map/matrix with random numerical values
+	map.randomize(); 
 
 	// create obstacles
 	for (var row = 0; row < map.rows; row++) {
@@ -140,6 +402,11 @@ var reset = function () {
 	        	rocks.push(rock1);
 	            map.value[row][col] = 99; // set cell occupied
 	            contentBoxes.push(contentBox); 
+	        } else {
+	        	contentBox = new Box(row, col);
+	            contentBox.createBox();
+	            map.value[row][col] = 1; // is not occupied
+	            contentBoxes.push(contentBox);
 	        } 
 	    }
 	} 
@@ -147,7 +414,7 @@ var reset = function () {
 	// get a random free cell for hero 1
 	var randomRow = map.rows * Math.random() | 0;
 	var randomCol = map.cols * Math.random() | 0;
-	while(map.value[randomRow][randomCol] === 99) { // already occupied by stone, do again
+	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
 		randomRow = map.rows * Math.random() | 0;
 		randomCol = map.cols * Math.random() | 0;
 	}
@@ -157,13 +424,13 @@ var reset = function () {
     contentBox.createBox();
 	hero1.x = contentBox.row * 60;
 	hero1.y = contentBox.col * 60;
-    map.value[randomRow][randomCol] = 99; // set cell occupied
+    map.value[randomRow][randomCol] = 88; // set cell occupied
     contentBoxes.push(contentBox); 
 
     // get a random free cell for hero 2
 	var randomRow = map.rows * Math.random() | 0;
 	var randomCol = map.cols * Math.random() | 0;
-	while(map.value[randomRow][randomCol] === 99) { // already occupied by stone, do again
+	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
 		randomRow = map.rows * Math.random() | 0;
 		randomCol = map.cols * Math.random() | 0;
 	}
@@ -173,114 +440,231 @@ var reset = function () {
     contentBox.createBox();
 	hero2.x = contentBox.row * 60;
 	hero2.y = contentBox.col * 60;
-	map.value[randomRow][randomCol] = 99; // set cell occupied
+	map.value[randomRow][randomCol] = 89; // set cell occupied
     contentBoxes.push(contentBox); 
 	
+    // get a random free cell for Grass Sword Weapon
+	var randomRow = map.rows * Math.random() | 0;
+	var randomCol = map.cols * Math.random() | 0;
+	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
+		randomRow = map.rows * Math.random() | 0;
+		randomCol = map.cols * Math.random() | 0;
+	}
+	
+	// place  Grass Sword Weapon
+    contentBox = new Box(randomRow, randomCol);
+    contentBox.createBox();
+	grass.x = contentBox.row * 60;
+	grass.y = contentBox.col * 60;
+	map.value[randomRow][randomCol] = 70; // set cell occupied
+    contentBoxes.push(contentBox); 
+  
+    
+    //get a random free cell for Finn Sword Weapon
+	var randomRow = map.rows * Math.random() | 0;
+	var randomCol = map.cols * Math.random() | 0;
+	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
+		randomRow = map.rows * Math.random() | 0;
+		randomCol = map.cols * Math.random() | 0;
+	}
+    
+	// place Finn Sword Weapon
+    contentBox = new Box(randomRow, randomCol);
+    contentBox.createBox();
+	finnSword.x = contentBox.row * 60;
+	finnSword.y = contentBox.col * 60;
+	map.value[randomRow][randomCol] = 71; // set cell occupied
+    contentBoxes.push(contentBox); 
+    
+    // get a random free cell for Scarlet Sword Weapon
+	var randomRow = map.rows * Math.random() | 0;
+	var randomCol = map.cols * Math.random() | 0;
+	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
+		randomRow = map.rows * Math.random() | 0;
+		randomCol = map.cols * Math.random() | 0;
+	}
+    
+	// place Scarlet Sword Weapon
+    contentBox = new Box(randomRow, randomCol);
+    contentBox.createBox();
+	scarletSword.x = contentBox.row * 60;
+	scarletSword.y = contentBox.col * 60;
+	map.value[randomRow][randomCol] = 72; // set cell occupied
+    contentBoxes.push(contentBox); 
+    
+    // get a random free cell for Magic Wand Weapon
+	var randomRow = map.rows * Math.random() | 0;
+	var randomCol = map.cols * Math.random() | 0;
+	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
+		randomRow = map.rows * Math.random() | 0;
+		randomCol = map.cols * Math.random() | 0;
+	}
+    
+	// place Magic Wand Weapon
+    contentBox = new Box(randomRow, randomCol);
+    contentBox.createBox();
+	magicWand.x = contentBox.row * 60;
+	magicWand.y = contentBox.col * 60;
+	map.value[randomRow][randomCol] = 73; // set cell occupied
+    contentBoxes.push(contentBox); 
+    
+    // get a random free cell for Mushroom Bomb Weapon
+	var randomRow = map.rows * Math.random() | 0;
+	var randomCol = map.cols * Math.random() | 0;
+	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
+		randomRow = map.rows * Math.random() | 0;
+		randomCol = map.cols * Math.random() | 0;
+	}
+	
+	// place Mushroom Bomb Weapon
+    contentBox = new Box(randomRow, randomCol);
+    contentBox.createBox();
+    mushBomb.x = contentBox.row * 60;
+    mushBomb.y = contentBox.col * 60;
+	map.value[randomRow][randomCol] = 74; // set cell occupied
+    contentBoxes.push(contentBox); 
+    
+    // get a random free cell for Demon Sword Weapon
+	var randomRow = map.rows * Math.random() | 0;
+	var randomCol = map.cols * Math.random() | 0;
+	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
+		randomRow = map.rows * Math.random() | 0;
+		randomCol = map.cols * Math.random() | 0;
+	}
+    
+	// place Demon Sword Weapon
+    contentBox = new Box(randomRow, randomCol);
+    contentBox.createBox();
+    demonSword.x = contentBox.row * 60;
+    demonSword.y = contentBox.col * 60;
+	map.value[randomRow][randomCol] = 75; // set cell occupied
+    contentBoxes.push(contentBox); 
+    
 };
 
-
-//Update game objects
-
-
-//check every barrier for collisions
-
-
-// if the move is allowed, return the desiredPlayer position
-// if the move is not allowed, return the old player position
-
-
-
-
-//var playerOnesTurn = false;
-// Update game objects
+const walkingSpeed = 60;
 var steps = 0;
+var playerOnesTurn = true;
+
 var update = function (modifier) {
+
 	// hero1
-//	if(playerOnesTurn) {
-	const walkingSpeed = 60;
+	if(playerOnesTurn) {
 		if (38 in keysDown) { // Player holding up
-			if(checkMoveAllowed()) {
-				hero1.y -= walkingSpeed;
+			if(hero1.getPositionAbove() < 88) {
+				if(hero1.getPositionAbove() == 70) {
+					hero1.weapon = grass;
+					hero1.damage = grass.damage;
+					grassReady = false;
+				}
+				hero1.updatePosition(0,-walkingSpeed);
 				steps++;
-			} else {
-				hero1.y += walkingSpeed;
-			}
+			} 
 			delete keysDown[38];
 			// moveCounter++
 		} else if (40 in keysDown) { // Player holding down
-			if(checkMoveAllowed()) {
-				hero1.y += walkingSpeed;
+			if(hero1.getPositionBelow() < 88) {
+				if(hero1.getPositionBelow() == 70) {
+					hero1.weapon = grass;
+					hero1.damage = grass.damage;
+					grassReady = false;
+				}
+				hero1.updatePosition(0, walkingSpeed);
 				steps++;
-			} else {
-				hero1.y -= walkingSpeed;
-			}
+			} 
 			delete keysDown[40];
 		} else if (37 in keysDown) { // Player holding left
-			if(checkMoveAllowed()) {
-				hero1.x -= walkingSpeed;
+			if(hero1.getPositionLeft() < 88) {
+				if(hero1.getPositionLeft() == 70) {
+					hero1.weapon = grass;
+					hero1.damage = grass.damage;
+					grassReady = false;
+				}
+				hero1.updatePosition(-walkingSpeed, 0);
 				steps++;
-			} else {
-				hero1.x += walkingSpeed;
-			}
+			} 
 			delete keysDown[37];
 		} else if (39 in keysDown) { // Player holding right
-			if(checkMoveAllowed()) {
-				hero1.x += walkingSpeed;
+			if(hero1.getPositionRight() < 88) {
+				if(hero1.getPositionRight() == 70) {
+					hero1.weapon = grass;
+					hero1.damage = grass.damage;
+					grassReady = false;
+				}
+				hero1.updatePosition(walkingSpeed, 0);
 				steps++;
-			} else {
-				hero1.x -= walkingSpeed;
-			}
+			} 
 			delete keysDown[39];
+		} else if (189 in keysDown) { // Player 1 deals damage (c)
+			if(hero1.opponentInVicinity()) {
+				hero2.health -= hero1.damage;
+				steps++;
+			} 
+			delete keysDown[189];
 		}
-//	} else {
-		// hero2
+		if(steps == 3) {
+			playerOnesTurn = false;
+			steps = 0;
+		}
+	} else { // hero2 87 83
 		if (87 in keysDown) { // Player holding up
-			hero2.y -= walkingSpeed;
+			if(hero2.getPositionAbove() < 88) {
+				if(hero2.getPositionAbove() == 70) {
+					hero2.weapon = grass;
+					hero2.damage = grass.damage;
+					grassReady = false;
+				}
+				hero2.updatePosition(0,-walkingSpeed);
+				steps++;
+			} 
 			delete keysDown[87];
 		} else if (83 in keysDown) { // Player holding down
-			hero2.y += walkingSpeed;
+			if(hero2.getPositionBelow() < 88) {
+				if(hero2.getPositionBelow() == 70) {
+					hero2.weapon = grass;
+					hero2.damage = grass.damage;
+					grassReady = false;
+				}
+				hero2.updatePosition(0, walkingSpeed);
+				steps++;
+			} 
 			delete keysDown[83];
 		} else if (65 in keysDown) { // Player holding left
-			hero2.x -= walkingSpeed;
+			if(hero2.getPositionLeft() < 88) {
+				if(hero2.getPositionLeft() == 70) {
+					hero2.weapon = grass;
+					hero2.damage = grass.damage;
+					grassReady = false;
+				}
+				hero2.updatePosition(-walkingSpeed, 0);
+				steps++;
+			} 
 			delete keysDown[65];
 		} else if (68 in keysDown) { // Player holding right
-			hero2.x += walkingSpeed;
+			if(hero2.getPositionRight() < 88) {
+				if(hero2.getPositionRight() == 70) {
+					hero2.weapon = grass;
+					hero2.damage = grass.damage;
+					grassReady = false;
+				}
+				hero2.updatePosition(walkingSpeed, 0);
+				steps++;
+			} 
 			delete keysDown[68];
+		} else if (67 in keysDown) { // Player 2 deals damage (c)
+			if(hero2.opponentInVicinity()) {
+				hero1.health -= hero2.damage;
+				steps++;
+			} 
+			delete keysDown[67];
 		}
-//	}
-	
-	// Are they touching?
-	// transform into one hero is touching weapon
-	
-		// for each box
 		
-		// if hero touches box
-		
-	 {
-		// make weapon disappear and give it to hero
-
-		//++hero2sCaught;
-		//reset();
+		if(steps == 3) {
+			playerOnesTurn = true;
+			steps = 0;
+		}
 	}
 };
-
-function checkMoveAllowed() {
-	var moveAllowed = true;
-	rocks.forEach(
-			rock => {
-				var heroTouchesTopBlock = 
-					hero1.x <= (rock.x + 48)
-					&& rock.x <= (hero1.x + 48)
-					&& hero1.y <= (rock.y + 48)
-					&& rock.y <= (hero1.y + 48);
-				
-				if (heroTouchesTopBlock) {
-					moveAllowed = false;
-				}
-			}
-		);
-	return moveAllowed;
-}
 
 // Draw everything
 var render = function () {
@@ -302,17 +686,57 @@ var render = function () {
 		);
 	}
 	
+	if (grassReady) {
+		ctx.drawImage(grassImage, grass.x, grass.y, 60, 60);
+	}
+	
+	if (finnSwordready) {
+		ctx.drawImage(finnSwordimage, finnSword.x, finnSword.y, 60, 60);
+	}
+	
+	if (scarletSwordready) {
+		ctx.drawImage(scarletSwordimage, scarletSword.x, scarletSword.y, 60, 60);
+	}
+	
+	if (magicWandready) {
+		ctx.drawImage(magicWandimage, magicWand.x, magicWand.y, 60, 60);
+	}
+	
+	if (mushBombready) {
+		ctx.drawImage(mushBombimage, mushBomb.x, mushBomb.y, 60, 60);
+	}
+	
+	if (demonSwordready) {
+		ctx.drawImage(demonSwordimage, demonSword.x, demonSword.y, 60, 60);
+	};
+
+	
 	// Score
 	ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.font = "24px Helvetica";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-//	if(playerOnesTurn) {
-		ctx.fillText("It's Finns turn: " + hero2sCaught, 32, 32);
-//	} else {
-//		ctx.fillText("It's Ferns turn: " + hero2sCaught, 32, 32);
-//	}
-		ctx.fillText("steps: " + steps, 32, 64);	
+	if(playerOnesTurn) {
+		ctx.fillText("It's hero1's turn.", 32, 32);
+	} else {
+		ctx.fillText("It's hero2's turn.", 32, 32);
+	}
+	ctx.fillText("steps: " + steps, 32, 64);
+	ctx.fillText("hero 1 health: " + hero1.health, 32, 96);
+	ctx.fillText("hero 1 damage: " + hero1.damage, 32, 128);
+	ctx.fillText("hero 2 health: " + hero2.health, 32, 160);
+	ctx.fillText("hero 2 damage: " + hero2.damage, 32, 196);
+	
+	
+	if(hero1.health == 0) {
+		ctx.fillText("hero 2 won.", 32, 228);
+		// reset game
+		// more visuals perhaps
+	} else if (hero2.health == 0) {
+		ctx.fillText("hero 1 won.", 32, 228);
+		// reset game 
+	}
+	
 };
 
 // The main game loop
