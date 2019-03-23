@@ -396,14 +396,64 @@ addEventListener("keyup", function (e) {
 }, false);
 
 /**
- * Reset/Create the game, place heros and obstacles
+ * Finds a random box (on the matrix)
+ * that is free, i.e., has the "1" as
+ * the (x,y) value.
+ */
+class FreeCellFinder {
+	find(map) {
+		var randomRow = map.rows * Math.random() | 0;
+		var randomCol = map.cols * Math.random() | 0;
+		while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
+			randomRow = map.rows * Math.random() | 0;
+			randomCol = map.cols * Math.random() | 0;
+		}
+		return new FreeCellCoords(randomRow, randomCol);
+	}
+}
+
+/**
+ * Utility class to encapsulates the 
+ * coordinates of the free cell.
+ */
+class FreeCellCoords {
+	constructor(row, col) {
+		this.row = row;
+		this.col = col;
+	}
+}
+
+/**
+ * Class to place an item on the map/matrix and 
+ * create a content box. 
+ */
+class ItemPlacer {
+	place(fcf, item, itemId, map, contentBoxes) {
+		var fcc = fcf.find(map); // find free cell cords
+		var contentBox = new Box(fcc.row, fcc.col);
+		contentBox.createBox();
+		item.x = contentBox.row * 60;
+		item.y = contentBox.col * 60;
+		map.value[fcc.row][fcc.col] = itemId; // set cell occupied
+		contentBoxes.push(contentBox); 
+	}
+}
+
+/**
+ * Reset/Create the game: place items on map 
+ * (obstacles, heros and weapons).
  */ 
 var reset = function () {
 
 	// fill map/matrix with random numerical values
 	map.randomize(); 
 
-	// create obstacles
+	/**
+	 * For the obstacle items (rocks):
+	 * (a) find a free cell,
+	 * (b) place items on the map (set 99 on matrix),
+	 * (c) set all other matrix cells to free (1).
+	 */
 	for (var row = 0; row < map.rows; row++) {
 	    for (var col = 0; col < map.cols; col++) {
 	        if (map.value[row][col] === 4) { // place stone
@@ -424,135 +474,22 @@ var reset = function () {
 	    }
 	} 
 	
-	// get a random free cell for hero 1
-	var randomRow = map.rows * Math.random() | 0;
-	var randomCol = map.cols * Math.random() | 0;
-	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
-		randomRow = map.rows * Math.random() | 0;
-		randomCol = map.cols * Math.random() | 0;
-	}
+	/**
+	 * For NON-obstacle items:
+	 * (a) find a free cell,
+	 * (b) place items on the map.
+	 */
+	var itemPlacer = new ItemPlacer(); // places items
+	var fcf = new FreeCellFinder(); // finds free cells
 	
-	// place hero 1
-    contentBox = new Box(randomRow, randomCol);
-    contentBox.createBox();
-	hero1.x = contentBox.row * 60;
-	hero1.y = contentBox.col * 60;
-    map.value[randomRow][randomCol] = 88; // set cell occupied
-    contentBoxes.push(contentBox); 
-
-    // get a random free cell for hero 2
-	var randomRow = map.rows * Math.random() | 0;
-	var randomCol = map.cols * Math.random() | 0;
-	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
-		randomRow = map.rows * Math.random() | 0;
-		randomCol = map.cols * Math.random() | 0;
-	}
-	
-	// place hero 2
-    contentBox = new Box(randomRow, randomCol);
-    contentBox.createBox();
-	hero2.x = contentBox.row * 60;
-	hero2.y = contentBox.col * 60;
-	map.value[randomRow][randomCol] = 89; // set cell occupied
-    contentBoxes.push(contentBox); 
-	
-    // get a random free cell for Grass Sword Weapon
-	var randomRow = map.rows * Math.random() | 0;
-	var randomCol = map.cols * Math.random() | 0;
-	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
-		randomRow = map.rows * Math.random() | 0;
-		randomCol = map.cols * Math.random() | 0;
-	}
-	
-	// place  Grass Sword Weapon
-    contentBox = new Box(randomRow, randomCol);
-    contentBox.createBox();
-	grass.x = contentBox.row * 60;
-	grass.y = contentBox.col * 60;
-	map.value[randomRow][randomCol] = 70; // set cell occupied
-    contentBoxes.push(contentBox); 
-  
-    
-    //get a random free cell for Finn Sword Weapon
-	var randomRow = map.rows * Math.random() | 0;
-	var randomCol = map.cols * Math.random() | 0;
-	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
-		randomRow = map.rows * Math.random() | 0;
-		randomCol = map.cols * Math.random() | 0;
-	}
-    
-	// place Finn Sword Weapon
-    contentBox = new Box(randomRow, randomCol);
-    contentBox.createBox();
-	finnSword.x = contentBox.row * 60;
-	finnSword.y = contentBox.col * 60;
-	map.value[randomRow][randomCol] = 71; // set cell occupied
-    contentBoxes.push(contentBox); 
-    
-    // get a random free cell for Scarlet Sword Weapon
-	var randomRow = map.rows * Math.random() | 0;
-	var randomCol = map.cols * Math.random() | 0;
-	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
-		randomRow = map.rows * Math.random() | 0;
-		randomCol = map.cols * Math.random() | 0;
-	}
-    
-	// place Scarlet Sword Weapon
-    contentBox = new Box(randomRow, randomCol);
-    contentBox.createBox();
-	scarletSword.x = contentBox.row * 60;
-	scarletSword.y = contentBox.col * 60;
-	map.value[randomRow][randomCol] = 72; // set cell occupied
-    contentBoxes.push(contentBox); 
-    
-    // get a random free cell for Magic Wand Weapon
-	var randomRow = map.rows * Math.random() | 0;
-	var randomCol = map.cols * Math.random() | 0;
-	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
-		randomRow = map.rows * Math.random() | 0;
-		randomCol = map.cols * Math.random() | 0;
-	}
-    
-	// place Magic Wand Weapon
-    contentBox = new Box(randomRow, randomCol);
-    contentBox.createBox();
-	magicWand.x = contentBox.row * 60;
-	magicWand.y = contentBox.col * 60;
-	map.value[randomRow][randomCol] = 73; // set cell occupied
-    contentBoxes.push(contentBox); 
-    
-    // get a random free cell for Mushroom Bomb Weapon
-	var randomRow = map.rows * Math.random() | 0;
-	var randomCol = map.cols * Math.random() | 0;
-	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
-		randomRow = map.rows * Math.random() | 0;
-		randomCol = map.cols * Math.random() | 0;
-	}
-	
-	// place Mushroom Bomb Weapon
-    contentBox = new Box(randomRow, randomCol);
-    contentBox.createBox();
-    mushBomb.x = contentBox.row * 60;
-    mushBomb.y = contentBox.col * 60;
-	map.value[randomRow][randomCol] = 74; // set cell occupied
-    contentBoxes.push(contentBox); 
-    
-    // get a random free cell for Demon Sword Weapon
-	var randomRow = map.rows * Math.random() | 0;
-	var randomCol = map.cols * Math.random() | 0;
-	while(map.value[randomRow][randomCol] != 1) { // already occupied by stone, do again
-		randomRow = map.rows * Math.random() | 0;
-		randomCol = map.cols * Math.random() | 0;
-	}
-    
-	// place Demon Sword Weapon
-    contentBox = new Box(randomRow, randomCol);
-    contentBox.createBox();
-    demonSword.x = contentBox.row * 60;
-    demonSword.y = contentBox.col * 60;
-	map.value[randomRow][randomCol] = 75; // set cell occupied
-    contentBoxes.push(contentBox); 
-    
+    itemPlacer.place(fcf, hero1, 88, map, contentBoxes);
+    itemPlacer.place(fcf, hero2, 89, map, contentBoxes);
+    itemPlacer.place(fcf, grass, 70, map, contentBoxes);
+    itemPlacer.place(fcf, finnSword, 71, map, contentBoxes);
+    itemPlacer.place(fcf, scarletSword, 72, map, contentBoxes);
+    itemPlacer.place(fcf, magicWand, 73, map, contentBoxes);
+    itemPlacer.place(fcf, mushBomb, 74, map, contentBoxes);
+    itemPlacer.place(fcf, demonSword, 75, map, contentBoxes);
 };
 
 const walkingSpeed = 60;
@@ -619,7 +556,7 @@ var update = function (modifier) {
 			playerOnesTurn = false;
 			steps = 0;
 		}
-	} else { // hero2 87 83
+	} else { // hero2 
 		if (87 in keysDown) { // Player holding up
 			if(hero2.getPositionAbove() < 88) {
 				if(hero2.getPositionAbove() == 70) {
@@ -722,7 +659,6 @@ var render = function () {
 	if (demonSwordready) {
 		ctx.drawImage(demonSwordimage, demonSword.x, demonSword.y, 60, 60);
 	};
-
 	
 	// Score
 	ctx.fillStyle = "rgb(250, 250, 250)";
