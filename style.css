@@ -35,7 +35,11 @@ h1 {
 	margin-left: 20px;
 }
 
-#character {
+#characterFinn {
+	min-height: 340px;
+}
+
+#characterFern {
 	min-height: 340px;
 }
 

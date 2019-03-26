@@ -97,7 +97,7 @@ var bgImage = new Image();
 bgImage.onload = function () {
 	bgReady = true;
 };
-bgImage.src = "pics/field.jpg";
+bgImage.src = "pics/field2.jpg";
 
 
 /**
@@ -176,7 +176,6 @@ demonSwordimage.onload = function () {
 };
 demonSwordimage.src = "pics/demon.png";
 
-
 /**
  * Obstacle Declaration
  */
@@ -191,18 +190,20 @@ var rockImage = new Image();
 rockImage.onload = function () {
 	rockReady = true;
 };
-rockImage.src = "pics/rock.png";
+rockImage.src = "pics/stone.png";
 
 /**
  * Heroes Declarations
  */
 class Hero1 {
-	constructor (x, y, health, damage, weapon) {
+	constructor (name, x, y, health, damage, weapon, isBlocking) {
+		this.name = name;
 		this.x = x;
 		this.y = y;
 		this.health = health;
         this.weapon = weapon;
         this.damage = weapon.damage;
+        this.isBlocking = isBlocking;
     }
 	
 	// getters
@@ -275,15 +276,21 @@ class Hero1 {
 				this.getPositionLeft() == 89;
 	}
 	
+	isBlocking() {
+		return this.isBlocking;
+	}
+	
 }
 
 class Hero2 {
-	constructor (x, y, health, damage, weapon) {
+	constructor (name, x, y, health, damage, weapon, isBlocking) {
+		this.name = name;
 		this.x = x;
 		this.y = y;
 		this.health = health;
         this.weapon = weapon;
         this.damage = weapon.damage;
+        this.isBlocking = isBlocking;
     }
 	
 	// getters
@@ -358,8 +365,8 @@ class Hero2 {
 	
 }
 
-var hero1 = new Hero1(0, 0, 100, 10, hands);
-var hero2 = new Hero2(0, 0, 100, 10, hands);
+var hero1 = new Hero1("Fern", 0, 0, 100, 10, hands, false);
+var hero2 = new Hero2("Finn", 0, 0, 100, 10, hands, false);
 
 /**
  * Hero Images
@@ -372,6 +379,7 @@ hero1Image.onload = function () {
 	hero1Ready = true;
 };
 hero1Image.src = "pics/fernMini.png";
+
 
 // hero2 image
 var hero2Ready = false;
@@ -506,6 +514,26 @@ var update = function (modifier) {
 					hero1.weapon = grass;
 					hero1.damage = grass.damage;
 					grassReady = false;
+				} else if(hero1.getPositionAbove() == 71) {
+					hero1.weapon = finnSword;
+					hero1.damage = finnSword.damage;
+					finnSwordready = false;
+				} else if(hero1.getPositionAbove() == 72) {
+					hero1.weapon = scarletSword;
+					hero1.damage = scarletSword.damage;
+					scarletSwordready = false;
+				} else if(hero1.getPositionAbove() == 73) {
+					hero1.weapon = magicWand;
+					hero1.damage = magicWand.damage;
+					magicWandready = false;
+				} else if(hero1.getPositionAbove() == 74) {
+					hero1.weapon = mushBomb;
+					hero1.damage = mushBomb.damage;
+					mushBombready = false;
+				} else if(hero1.getPositionAbove() == 75) {
+					hero1.weapon = demonSword;
+					hero1.damage = demonSword.damage;
+					demonSwordready = false;
 				}
 				hero1.updatePosition(0,-walkingSpeed);
 				steps++;
@@ -518,40 +546,123 @@ var update = function (modifier) {
 					hero1.weapon = grass;
 					hero1.damage = grass.damage;
 					grassReady = false;
+				} else if(hero1.getPositionBelow() == 71) {
+					hero1.weapon = finnSword;
+					hero1.damage = finnSword.damage;
+					finnSwordready = false;
+				} else if(hero1.getPositionBelow() == 72) {
+					hero1.weapon = scarletSword;
+					hero1.damage = scarletSword.damage;
+					scarletSwordready = false;
+				} else if(hero1.getPositionBelow() == 73) {
+					hero1.weapon = magicWand;
+					hero1.damage = magicWand.damage;
+					magicWandready = false;
+				} else if(hero1.getPositionBelow() == 74) {
+					hero1.weapon = mushBomb;
+					hero1.damage = mushBomb.damage;
+					mushBombready = false;
+				} else if(hero1.getPositionBelow() == 75) {
+					hero1.weapon = demonSword;
+					hero1.damage = demonSword.damage;
+					demonSwordready = false;
 				}
 				hero1.updatePosition(0, walkingSpeed);
 				steps++;
 			} 
 			delete keysDown[40];
+			
 		} else if (37 in keysDown) { // Player holding left
 			if(hero1.getPositionLeft() < 88) {
 				if(hero1.getPositionLeft() == 70) {
 					hero1.weapon = grass;
 					hero1.damage = grass.damage;
 					grassReady = false;
+				} else if(hero1.getPositionLeft() == 71) {
+					hero1.weapon = finnSword;
+					hero1.damage = finnSword.damage;
+					finnSwordready = false;
+				} else if(hero1.getPositionLeft() == 72) {
+					hero1.weapon = scarletSword;
+					hero1.damage = scarletSword.damage;
+					scarletSwordready = false;
+				} else if(hero1.getPositionLeft() == 73) {
+					hero1.weapon = magicWand;
+					hero1.damage = magicWand.damage;
+					magicWandready = false;
+				} else if(hero1.getPositionLeft() == 74) {
+					hero1.weapon = mushBomb;
+					hero1.damage = mushBomb.damage;
+					mushBombready = false;
+				} else if(hero1.getPositionLeft() == 75) {
+					hero1.weapon = demonSword;
+					hero1.damage = demonSword.damage;
+					demonSwordready = false;
 				}
 				hero1.updatePosition(-walkingSpeed, 0);
 				steps++;
 			} 
 			delete keysDown[37];
+			
 		} else if (39 in keysDown) { // Player holding right
 			if(hero1.getPositionRight() < 88) {
 				if(hero1.getPositionRight() == 70) {
 					hero1.weapon = grass;
 					hero1.damage = grass.damage;
 					grassReady = false;
+				} else if(hero1.getPositionRight() == 71) {
+					hero1.weapon = finnSword;
+					hero1.damage = finnSword.damage;
+					finnSwordready = false;
+				} else if(hero1.getPositionRight() == 72) {
+					hero1.weapon = scarletSword;
+					hero1.damage = scarletSword.damage;
+					scarletSwordready = false;
+				} else if(hero1.getPositionRight() == 73) {
+					hero1.weapon = magicWand;
+					hero1.damage = magicWand.damage;
+					magicWandready = false;
+				} else if(hero1.getPositionRight() == 74) {
+					hero1.weapon = mushBomb;
+					hero1.damage = mushBomb.damage;
+					mushBombready = false;
+				} else if(hero1.getPositionRight() == 75) {
+					hero1.weapon = demonSword;
+					hero1.damage = demonSword.damage;
+					demonSwordready = false;
 				}
 				hero1.updatePosition(walkingSpeed, 0);
 				steps++;
 			} 
 			delete keysDown[39];
-		} else if (189 in keysDown) { // Player 1 deals damage (c)
+		} else if (191 in keysDown) { // Player 1 deals damage (/)
 			if(hero1.opponentInVicinity()) {
-				hero2.health -= hero1.damage;
+				/**
+				 * If the other hero (here hero2) is blocking,
+				 * hero1 attacks deal less damage (hero2 health is
+				 * reduced less). 
+				 */
+				if(hero2.isBlocking) { 
+					hero2.health -= hero1.damage / 2;					
+				} else {
+					hero2.health -= hero1.damage;
+				}
+				healthBarProgress(hero2.name);
 				steps++;
 			} 
-			delete keysDown[189];
+			delete keysDown[191];
+		} else if (190 in keysDown) { // Player 2 defeats attack(x)
+			if(hero1.isBlocking) { // hero currently blocking, restore
+				heros.isBlocking = false;
+				hero1.damage = hero1.damage * 2;
+			} else { // hero currently not blocking, decrease his dmg
+				hero1.isBlocking = true;
+				hero1.damage = hero1.damage / 2;
+			}
+			steps++; 
+			delete keysDown[190];
 		}
+		
 		if(steps == 3) {
 			playerOnesTurn = false;
 			steps = 0;
@@ -563,6 +674,26 @@ var update = function (modifier) {
 					hero2.weapon = grass;
 					hero2.damage = grass.damage;
 					grassReady = false;
+				} else if(hero2.getPositionAbove() == 71) {
+					hero2.weapon = finnSword;
+					hero2.damage = finnSword.damage;
+					finnSwordready = false;
+				} else if(hero2.getPositionAbove() == 72) {
+					hero2.weapon = scarletSword;
+					hero2.damage = scarletSword.damage;
+					scarletSwordready = false;
+				} else if(hero2.getPositionAbove() == 73) {
+					hero2.weapon = magicWand;
+					hero2.damage = magicWand.damage;
+					magicWandready = false;
+				} else if(hero2.getPositionAbove() == 74) {
+					hero2.weapon = mushBomb;
+					hero2.damage = mushBomb.damage;
+					mushBombready = false;
+				} else if(hero2.getPositionAbove() == 75) {
+					hero2.weapon = demonSword;
+					hero2.damage = demonSword.damage;
+					demonSwordready = false;
 				}
 				hero2.updatePosition(0,-walkingSpeed);
 				steps++;
@@ -574,6 +705,26 @@ var update = function (modifier) {
 					hero2.weapon = grass;
 					hero2.damage = grass.damage;
 					grassReady = false;
+				} else if(hero2.getPositionBelow() == 71) {
+					hero2.weapon = finnSword;
+					hero2.damage = finnSword.damage;
+					finnSwordready = false;
+				} else if(hero2.getPositionBelow() == 72) {
+					hero2.weapon = scarletSword;
+					hero2.damage = scarletSword.damage;
+					scarletSwordready = false;
+				} else if(hero2.getPositionBelow() == 73) {
+					hero2.weapon = magicWand;
+					hero2.damage = magicWand.damage;
+					magicWandready = false;
+				} else if(hero2.getPositionBelow() == 74) {
+					hero2.weapon = mushBomb;
+					hero2.damage = mushBomb.damage;
+					mushBombready = false;
+				} else if(hero2.getPositionBelow() == 75) {
+					hero2.weapon = demonSword;
+					hero2.damage = demonSword.damage;
+					demonSwordready = false;
 				}
 				hero2.updatePosition(0, walkingSpeed);
 				steps++;
@@ -585,6 +736,26 @@ var update = function (modifier) {
 					hero2.weapon = grass;
 					hero2.damage = grass.damage;
 					grassReady = false;
+				} else if(hero2.getPositionLeft() == 71) {
+					hero2.weapon = finnSword;
+					hero2.damage = finnSword.damage;
+					finnSwordready = false;
+				} else if(hero2.getPositionLeft() == 72) {
+					hero2.weapon = scarletSword;
+					hero2.damage = scarletSword.damage;
+					scarletSwordready = false;
+				} else if(hero2.getPositionLeft() == 73) {
+					hero2.weapon = magicWand;
+					hero2.damage = magicWand.damage;
+					magicWandready = false;
+				} else if(hero2.getPositionLeft() == 74) {
+					hero2.weapon = mushBomb;
+					hero2.damage = mushBomb.damage;
+					mushBombready = false;
+				} else if(hero2.getPositionLeft() == 75) {
+					hero2.weapon = demonSword;
+					hero2.damage = demonSword.damage;
+					demonSwordready = false;
 				}
 				hero2.updatePosition(-walkingSpeed, 0);
 				steps++;
@@ -596,6 +767,26 @@ var update = function (modifier) {
 					hero2.weapon = grass;
 					hero2.damage = grass.damage;
 					grassReady = false;
+				} else if(hero2.getPositionRight() == 71) {
+					hero2.weapon = finnSword;
+					hero2.damage = finnSword.damage;
+					finnSwordready = false;
+				} else if(hero2.getPositionRight() == 72) {
+					hero2.weapon = scarletSword;
+					hero2.damage = scarletSword.damage;
+					scarletSwordready = false;
+				} else if(hero2.getPositionRight() == 73) {
+					hero2.weapon = magicWand;
+					hero2.damage = magicWand.damage;
+					magicWandready = false;
+				} else if(hero2.getPositionRight() == 74) {
+					hero2.weapon = mushBomb;
+					hero2.damage = mushBomb.damage;
+					mushBombready = false;
+				} else if(hero2.getPositionRight() == 75) {
+					hero2.weapon = demonSword;
+					hero2.damage = demonSword.damage;
+					demonSwordready = false; 
 				}
 				hero2.updatePosition(walkingSpeed, 0);
 				steps++;
@@ -603,10 +794,30 @@ var update = function (modifier) {
 			delete keysDown[68];
 		} else if (67 in keysDown) { // Player 2 deals damage (c)
 			if(hero2.opponentInVicinity()) {
-				hero1.health -= hero2.damage;
+				/**
+				 * If the other hero (here hero1) is blocking,
+				 * hero2 attacks deal less damage (hero1 health is
+				 * reduced less). 
+				 */
+				if(hero1.isBlocking) { 
+					hero1.health -= hero2.damage / 2;					
+				} else {
+					hero1.health -= hero2.damage;
+				}
+				healthBarProgress(hero1.name);
 				steps++;
 			} 
 			delete keysDown[67];
+		} else if (88 in keysDown) { // Player 2 defeats attack(x)
+			if(hero2.isBlocking) { // hero currently blocking, restore
+				hero2.isBlocking = false;
+				hero2.damage = hero2.damage * 2;
+			} else { // hero currently not blocking, decrease his dmg
+				hero2.isBlocking = true;
+				hero2.damage = hero2.damage / 2;
+			}
+			steps++; 
+			delete keysDown[88];
 		}
 		
 		if(steps == 3) {
@@ -615,6 +826,7 @@ var update = function (modifier) {
 		}
 	}
 };
+
 
 // Draw everything
 var render = function () {
@@ -687,6 +899,31 @@ var render = function () {
 	}
 	
 };
+
+//Affect health bars
+
+
+
+function healthBarProgress(heroName) {
+	switch (heroName) {
+	case "Fern":
+		$("#healthFern").css('width', hero1.health +'%')
+						.attr('aria-valuenow', hero1.health)
+						.text(hero1.health + ' %');
+        break;
+	case "Finn":
+		$("#healthFinn").css('width', hero2.health +'%')
+						.attr('aria-valuenow', hero2.health)
+						.text(hero2.health + ' %');
+        break;
+	default:
+	        break;
+	}
+}
+
+
+
+
 
 // The main game loop
 var main = function () {
