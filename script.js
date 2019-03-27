@@ -62,7 +62,7 @@ class Matrix {
         for (var i = 0; i < this.rows; i++) {
 
             for (var j = 0; j < this.cols; j++) {
-                this.value[i][j] = Math.floor(Math.random() * Math.floor(5)); 
+                this.value[i][j] = Math.floor(Math.random() * Math.floor(8)); 
             }
         }
     }  
@@ -190,7 +190,7 @@ var rockImage = new Image();
 rockImage.onload = function () {
 	rockReady = true;
 };
-rockImage.src = "pics/stone.png";
+rockImage.src = "pics/hay.png";
 
 /**
  * Heroes Declarations
@@ -204,6 +204,7 @@ class Hero1 {
         this.weapon = weapon;
         this.damage = weapon.damage;
         this.isBlocking = isBlocking;
+       
     }
 	
 	// getters
@@ -366,7 +367,7 @@ class Hero2 {
 }
 
 var hero1 = new Hero1("Fern", 0, 0, 100, 10, hands, false);
-var hero2 = new Hero2("Finn", 0, 0, 100, 10, hands, false);
+var hero2 = new Hero2("Finn", 0, 0, 100, 10, hands, false, );
 
 /**
  * Hero Images
@@ -675,13 +676,9 @@ var update = function (modifier) {
 					hero2.damage = grass.damage;
 					grassReady = false;
 				} else if(hero2.getPositionAbove() == 71) {
-					hero2.weapon = finnSword;
-					hero2.damage = finnSword.damage;
-					finnSwordready = false;
+					changeCharactersAppearance(hero2, finnSword);
 				} else if(hero2.getPositionAbove() == 72) {
-					hero2.weapon = scarletSword;
-					hero2.damage = scarletSword.damage;
-					scarletSwordready = false;
+					changeCharactersAppearance(hero2, scarletSword);
 				} else if(hero2.getPositionAbove() == 73) {
 					hero2.weapon = magicWand;
 					hero2.damage = magicWand.damage;
@@ -706,13 +703,9 @@ var update = function (modifier) {
 					hero2.damage = grass.damage;
 					grassReady = false;
 				} else if(hero2.getPositionBelow() == 71) {
-					hero2.weapon = finnSword;
-					hero2.damage = finnSword.damage;
-					finnSwordready = false;
+					changeCharactersAppearance(hero2, finnSword);
 				} else if(hero2.getPositionBelow() == 72) {
-					hero2.weapon = scarletSword;
-					hero2.damage = scarletSword.damage;
-					scarletSwordready = false;
+					changeCharactersAppearance(hero2, scarletSword);
 				} else if(hero2.getPositionBelow() == 73) {
 					hero2.weapon = magicWand;
 					hero2.damage = magicWand.damage;
@@ -737,13 +730,9 @@ var update = function (modifier) {
 					hero2.damage = grass.damage;
 					grassReady = false;
 				} else if(hero2.getPositionLeft() == 71) {
-					hero2.weapon = finnSword;
-					hero2.damage = finnSword.damage;
-					finnSwordready = false;
+					changeCharactersAppearance(hero2, finnSword);
 				} else if(hero2.getPositionLeft() == 72) {
-					hero2.weapon = scarletSword;
-					hero2.damage = scarletSword.damage;
-					scarletSwordready = false;
+					changeCharactersAppearance(hero2, scarletSword);
 				} else if(hero2.getPositionLeft() == 73) {
 					hero2.weapon = magicWand;
 					hero2.damage = magicWand.damage;
@@ -763,18 +752,24 @@ var update = function (modifier) {
 			delete keysDown[65];
 		} else if (68 in keysDown) { // Player holding right
 			if(hero2.getPositionRight() < 88) {
+			/**
+			 * THE BELOW IS NOT RIGHT SWITCH SYNTAX
+			 * switch(hero2.getPositionRight()) {
+			 * case: 70: changeCharactersAppearance(hero2, grass); break;
+			 * case: 71: changeCharactersAppearance(hero2, finnSword); break;
+			 * ....
+			 * default: break;
+			 * }
+			 * 
+			 */
 				if(hero2.getPositionRight() == 70) {
 					hero2.weapon = grass;
 					hero2.damage = grass.damage;
 					grassReady = false;
 				} else if(hero2.getPositionRight() == 71) {
-					hero2.weapon = finnSword;
-					hero2.damage = finnSword.damage;
-					finnSwordready = false;
+					changeCharactersAppearance(hero2, finnSword);
 				} else if(hero2.getPositionRight() == 72) {
-					hero2.weapon = scarletSword;
-					hero2.damage = scarletSword.damage;
-					scarletSwordready = false;
+					changeCharactersAppearance(hero2, scarletSword);
 				} else if(hero2.getPositionRight() == 73) {
 					hero2.weapon = magicWand;
 					hero2.damage = magicWand.damage;
@@ -922,7 +917,29 @@ function healthBarProgress(heroName) {
 }
 
 
+//Change characters' divs behavior
 
+
+function changeCharactersAppearance(hero, newWeapon) {
+	switch (newWeapon.name)	{
+	case "Finn Sword":
+		hero.weapon = finnSword;
+		hero.damage = finnSword.damage;
+		finnSwordready = false;
+		document.getElementById("characterFinn").src="pics/finn_weapon.png";
+		break;
+	case "Scarlet Sword":
+		hero2.weapon = scarletSword;
+		hero2.damage = scarletSword.damage;
+		scarletSwordready = false;
+		document.getElementById("characterFinn").src="pics/finnEquipedScarletSword.png";
+		break;
+	default: 
+		break;	
+
+	}
+
+}
 
 
 // The main game loop
