@@ -36,11 +36,11 @@ h1 {
 }
 
 #characterFinn {
-	min-height: 340px;
+	max-height: 340px;
 }
 
 #characterFern {
-	min-height: 340px;
+	max-height: 340px;
 }
 
 #finn {

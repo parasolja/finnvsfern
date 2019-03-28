@@ -195,8 +195,8 @@ rockImage.src = "pics/hay.png";
 /**
  * Heroes Declarations
  */
-class Hero1 {
-	constructor (name, x, y, health, damage, weapon, isBlocking) {
+class Hero {
+	constructor (name, x, y, health, damage, weapon, isBlocking, heroId) {
 		this.name = name;
 		this.x = x;
 		this.y = y;
@@ -204,7 +204,7 @@ class Hero1 {
         this.weapon = weapon;
         this.damage = weapon.damage;
         this.isBlocking = isBlocking;
-       
+        this.heroId = heroId;
     }
 	
 	// getters
@@ -251,123 +251,54 @@ class Hero1 {
 	
 	
 	updatePosition(x,y) {
+		//peter.updateposition(20,30);
+		/**
+		 * Before updating, Check whether the old position value
+		 * was a weapon. If yes, leave a "weapon value" behind.
+		 */
+		var upcomingPositionVal = map.value[this.x/60][this.y/60];
+		var oldPositionVal;
+		// is it a weapon?
+		if(upcomingPositionVal >= 70 && upcomingPositionVal < 88) {
+			oldPositionVal = upcomingPositionVal;
+		} else { // it was not a weapon
+			oldPositionVal = 1;
+		}
+		
 		this.x += x;
 		this.y += y;
+		/**
+		 * Move the character and update previous position
+		 */
 		if(x != 0 || y != 0) { // hero did a move 
-			this.setCurrentPosition(88);
+			this.setCurrentPosition(this.heroId);
 		}
+
 		if(x>0) { // hero moves right
-			this.setPositionLeft(1);
+			this.setPositionLeft(oldPositionVal);
 		}
 		if(x<0) { // hero moves left
-			this.setPositionRight(1);
+			this.setPositionRight(oldPositionVal);
 		}
 		if(y<0) { // her moves up
-			this.setPositionBelow(1);
+			this.setPositionBelow(oldPositionVal);
 		}
 		if(y>0) { // hero moves down
-			this.setPositionAbove(1);
+			this.setPositionAbove(oldPositionVal);
 		}
 	}
 	
 	opponentInVicinity() {
-		return 	this.getPositionAbove() == 89 ||
-				this.getPositionBelow() == 89 ||
-				this.getPositionRight() == 89 ||
-				this.getPositionLeft() == 89;
-	}
-	
-	isBlocking() {
-		return this.isBlocking;
+		return 	this.getPositionAbove() == this.heroId ||
+				this.getPositionBelow() == this.heroId ||
+				this.getPositionRight() == this.heroId ||
+				this.getPositionLeft() == this.heroId;
 	}
 	
 }
 
-class Hero2 {
-	constructor (name, x, y, health, damage, weapon, isBlocking) {
-		this.name = name;
-		this.x = x;
-		this.y = y;
-		this.health = health;
-        this.weapon = weapon;
-        this.damage = weapon.damage;
-        this.isBlocking = isBlocking;
-    }
-	
-	// getters
-	getCurrentPosition() {
-		return map.value[this.x/60][this.y/60];
-	}
-	
-	getPositionAbove() {
-		return map.value[this.x/60][(this.y/60)-1];
-	}
-	
-	getPositionBelow() {
-		return map.value[this.x/60][(this.y/60)+1];
-	}
-	
-	getPositionLeft() {
-		return map.value[(this.x/60)-1][this.y/60];
-	}
-
-	getPositionRight() {
-		return map.value[(this.x/60)+1][this.y/60];
-	}
-	
-	// setters
-	setCurrentPosition(value) {
-		map.value[this.x/60][this.y/60] = value;
-	}
-	
-	setPositionAbove(value) {
-		map.value[this.x/60][(this.y/60)-1] = value;
-	}
-	
-	setPositionBelow(value) {
-		map.value[this.x/60][(this.y/60)+1] = value;
-	}
-	
-	setPositionLeft(value) {
-		map.value[(this.x/60)-1][this.y/60] = value;
-	}
-
-	setPositionRight(value) {
-		map.value[(this.x/60)+1][this.y/60] = value;
-	}
-	
-	
-	updatePosition(x,y) {
-		this.x += x;
-		this.y += y;
-		if(x != 0 || y != 0) { // hero did a move 
-			this.setCurrentPosition(89);
-		}
-		if(x>0) { // hero moves right
-			this.setPositionLeft(1);
-		}
-		if(x<0) { // hero moves left
-			this.setPositionRight(1);
-		}
-		if(y<0) { // her moves up
-			this.setPositionBelow(1);
-		}
-		if(y>0) { // hero moves down
-			this.setPositionAbove(1);
-		}
-	}
-	
-	opponentInVicinity() {
-		return 	this.getPositionAbove() == 88 ||
-				this.getPositionBelow() == 88 ||
-				this.getPositionRight() == 88 ||
-				this.getPositionLeft() == 88;
-	}
-	
-}
-
-var hero1 = new Hero1("Fern", 0, 0, 100, 10, hands, false);
-var hero2 = new Hero2("Finn", 0, 0, 100, 10, hands, false, );
+var hero1 = new Hero("Fern", 0, 0, 100, 10, hands, false, 88);
+var hero2 = new Hero("Finn", 0, 0, 100, 10, hands, false, 89);
 
 /**
  * Hero Images
@@ -476,9 +407,9 @@ var reset = function () {
 	            contentBoxes.push(contentBox); 
 	        } else {
 	        	contentBox = new Box(row, col);
-	            contentBox.createBox();
-	            map.value[row][col] = 1; // is not occupied
-	            contentBoxes.push(contentBox);
+	        	contentBox.createBox();
+	        	map.value[row][col] = 1; // is not occupied
+	        	contentBoxes.push(contentBox);
 	        } 
 	    }
 	} 
@@ -511,63 +442,15 @@ var update = function (modifier) {
 	if(playerOnesTurn) {
 		if (38 in keysDown) { // Player holding up
 			if(hero1.getPositionAbove() < 88) {
-				if(hero1.getPositionAbove() == 70) {
-					hero1.weapon = grass;
-					hero1.damage = grass.damage;
-					grassReady = false;
-				} else if(hero1.getPositionAbove() == 71) {
-					hero1.weapon = finnSword;
-					hero1.damage = finnSword.damage;
-					finnSwordready = false;
-				} else if(hero1.getPositionAbove() == 72) {
-					hero1.weapon = scarletSword;
-					hero1.damage = scarletSword.damage;
-					scarletSwordready = false;
-				} else if(hero1.getPositionAbove() == 73) {
-					hero1.weapon = magicWand;
-					hero1.damage = magicWand.damage;
-					magicWandready = false;
-				} else if(hero1.getPositionAbove() == 74) {
-					hero1.weapon = mushBomb;
-					hero1.damage = mushBomb.damage;
-					mushBombready = false;
-				} else if(hero1.getPositionAbove() == 75) {
-					hero1.weapon = demonSword;
-					hero1.damage = demonSword.damage;
-					demonSwordready = false;
-				}
+				changeCharacterUsingNewPosFern(hero1.getPositionAbove());
 				hero1.updatePosition(0,-walkingSpeed);
 				steps++;
 			} 
 			delete keysDown[38];
-			// moveCounter++
+
 		} else if (40 in keysDown) { // Player holding down
 			if(hero1.getPositionBelow() < 88) {
-				if(hero1.getPositionBelow() == 70) {
-					hero1.weapon = grass;
-					hero1.damage = grass.damage;
-					grassReady = false;
-				} else if(hero1.getPositionBelow() == 71) {
-					hero1.weapon = finnSword;
-					hero1.damage = finnSword.damage;
-					finnSwordready = false;
-				} else if(hero1.getPositionBelow() == 72) {
-					hero1.weapon = scarletSword;
-					hero1.damage = scarletSword.damage;
-					scarletSwordready = false;
-				} else if(hero1.getPositionBelow() == 73) {
-					hero1.weapon = magicWand;
-					hero1.damage = magicWand.damage;
-					magicWandready = false;
-				} else if(hero1.getPositionBelow() == 74) {
-					hero1.weapon = mushBomb;
-					hero1.damage = mushBomb.damage;
-					mushBombready = false;
-				} else if(hero1.getPositionBelow() == 75) {
-					hero1.weapon = demonSword;
-					hero1.damage = demonSword.damage;
-					demonSwordready = false;
-				}
+				changeCharacterUsingNewPosFern(hero1.getPositionBelow());
 				hero1.updatePosition(0, walkingSpeed);
 				steps++;
 			} 
@@ -575,31 +458,7 @@ var update = function (modifier) {
 			
 		} else if (37 in keysDown) { // Player holding left
 			if(hero1.getPositionLeft() < 88) {
-				if(hero1.getPositionLeft() == 70) {
-					hero1.weapon = grass;
-					hero1.damage = grass.damage;
-					grassReady = false;
-				} else if(hero1.getPositionLeft() == 71) {
-					hero1.weapon = finnSword;
-					hero1.damage = finnSword.damage;
-					finnSwordready = false;
-				} else if(hero1.getPositionLeft() == 72) {
-					hero1.weapon = scarletSword;
-					hero1.damage = scarletSword.damage;
-					scarletSwordready = false;
-				} else if(hero1.getPositionLeft() == 73) {
-					hero1.weapon = magicWand;
-					hero1.damage = magicWand.damage;
-					magicWandready = false;
-				} else if(hero1.getPositionLeft() == 74) {
-					hero1.weapon = mushBomb;
-					hero1.damage = mushBomb.damage;
-					mushBombready = false;
-				} else if(hero1.getPositionLeft() == 75) {
-					hero1.weapon = demonSword;
-					hero1.damage = demonSword.damage;
-					demonSwordready = false;
-				}
+				changeCharacterUsingNewPosFern(hero1.getPositionLeft());
 				hero1.updatePosition(-walkingSpeed, 0);
 				steps++;
 			} 
@@ -607,31 +466,7 @@ var update = function (modifier) {
 			
 		} else if (39 in keysDown) { // Player holding right
 			if(hero1.getPositionRight() < 88) {
-				if(hero1.getPositionRight() == 70) {
-					hero1.weapon = grass;
-					hero1.damage = grass.damage;
-					grassReady = false;
-				} else if(hero1.getPositionRight() == 71) {
-					hero1.weapon = finnSword;
-					hero1.damage = finnSword.damage;
-					finnSwordready = false;
-				} else if(hero1.getPositionRight() == 72) {
-					hero1.weapon = scarletSword;
-					hero1.damage = scarletSword.damage;
-					scarletSwordready = false;
-				} else if(hero1.getPositionRight() == 73) {
-					hero1.weapon = magicWand;
-					hero1.damage = magicWand.damage;
-					magicWandready = false;
-				} else if(hero1.getPositionRight() == 74) {
-					hero1.weapon = mushBomb;
-					hero1.damage = mushBomb.damage;
-					mushBombready = false;
-				} else if(hero1.getPositionRight() == 75) {
-					hero1.weapon = demonSword;
-					hero1.damage = demonSword.damage;
-					demonSwordready = false;
-				}
+				changeCharacterUsingNewPosFern(hero1.getPositionRight());
 				hero1.updatePosition(walkingSpeed, 0);
 				steps++;
 			} 
@@ -671,118 +506,28 @@ var update = function (modifier) {
 	} else { // hero2 
 		if (87 in keysDown) { // Player holding up
 			if(hero2.getPositionAbove() < 88) {
-				if(hero2.getPositionAbove() == 70) {
-					hero2.weapon = grass;
-					hero2.damage = grass.damage;
-					grassReady = false;
-				} else if(hero2.getPositionAbove() == 71) {
-					changeCharactersAppearance(hero2, finnSword);
-				} else if(hero2.getPositionAbove() == 72) {
-					changeCharactersAppearance(hero2, scarletSword);
-				} else if(hero2.getPositionAbove() == 73) {
-					hero2.weapon = magicWand;
-					hero2.damage = magicWand.damage;
-					magicWandready = false;
-				} else if(hero2.getPositionAbove() == 74) {
-					hero2.weapon = mushBomb;
-					hero2.damage = mushBomb.damage;
-					mushBombready = false;
-				} else if(hero2.getPositionAbove() == 75) {
-					hero2.weapon = demonSword;
-					hero2.damage = demonSword.damage;
-					demonSwordready = false;
-				}
+				changeCharacterUsingNewPosFinn(hero2.getPositionAbove());
 				hero2.updatePosition(0,-walkingSpeed);
 				steps++;
 			} 
 			delete keysDown[87];
 		} else if (83 in keysDown) { // Player holding down
 			if(hero2.getPositionBelow() < 88) {
-				if(hero2.getPositionBelow() == 70) {
-					hero2.weapon = grass;
-					hero2.damage = grass.damage;
-					grassReady = false;
-				} else if(hero2.getPositionBelow() == 71) {
-					changeCharactersAppearance(hero2, finnSword);
-				} else if(hero2.getPositionBelow() == 72) {
-					changeCharactersAppearance(hero2, scarletSword);
-				} else if(hero2.getPositionBelow() == 73) {
-					hero2.weapon = magicWand;
-					hero2.damage = magicWand.damage;
-					magicWandready = false;
-				} else if(hero2.getPositionBelow() == 74) {
-					hero2.weapon = mushBomb;
-					hero2.damage = mushBomb.damage;
-					mushBombready = false;
-				} else if(hero2.getPositionBelow() == 75) {
-					hero2.weapon = demonSword;
-					hero2.damage = demonSword.damage;
-					demonSwordready = false;
-				}
+				changeCharacterUsingNewPosFinn(hero2.getPositionBelow());
 				hero2.updatePosition(0, walkingSpeed);
 				steps++;
 			} 
 			delete keysDown[83];
 		} else if (65 in keysDown) { // Player holding left
 			if(hero2.getPositionLeft() < 88) {
-				if(hero2.getPositionLeft() == 70) {
-					hero2.weapon = grass;
-					hero2.damage = grass.damage;
-					grassReady = false;
-				} else if(hero2.getPositionLeft() == 71) {
-					changeCharactersAppearance(hero2, finnSword);
-				} else if(hero2.getPositionLeft() == 72) {
-					changeCharactersAppearance(hero2, scarletSword);
-				} else if(hero2.getPositionLeft() == 73) {
-					hero2.weapon = magicWand;
-					hero2.damage = magicWand.damage;
-					magicWandready = false;
-				} else if(hero2.getPositionLeft() == 74) {
-					hero2.weapon = mushBomb;
-					hero2.damage = mushBomb.damage;
-					mushBombready = false;
-				} else if(hero2.getPositionLeft() == 75) {
-					hero2.weapon = demonSword;
-					hero2.damage = demonSword.damage;
-					demonSwordready = false;
-				}
+				changeCharacterUsingNewPosFinn(hero2.getPositionLeft());
 				hero2.updatePosition(-walkingSpeed, 0);
 				steps++;
 			} 
 			delete keysDown[65];
 		} else if (68 in keysDown) { // Player holding right
 			if(hero2.getPositionRight() < 88) {
-			/**
-			 * THE BELOW IS NOT RIGHT SWITCH SYNTAX
-			 * switch(hero2.getPositionRight()) {
-			 * case: 70: changeCharactersAppearance(hero2, grass); break;
-			 * case: 71: changeCharactersAppearance(hero2, finnSword); break;
-			 * ....
-			 * default: break;
-			 * }
-			 * 
-			 */
-				if(hero2.getPositionRight() == 70) {
-					hero2.weapon = grass;
-					hero2.damage = grass.damage;
-					grassReady = false;
-				} else if(hero2.getPositionRight() == 71) {
-					changeCharactersAppearance(hero2, finnSword);
-				} else if(hero2.getPositionRight() == 72) {
-					changeCharactersAppearance(hero2, scarletSword);
-				} else if(hero2.getPositionRight() == 73) {
-					hero2.weapon = magicWand;
-					hero2.damage = magicWand.damage;
-					magicWandready = false;
-				} else if(hero2.getPositionRight() == 74) {
-					hero2.weapon = mushBomb;
-					hero2.damage = mushBomb.damage;
-					mushBombready = false;
-				} else if(hero2.getPositionRight() == 75) {
-					hero2.weapon = demonSword;
-					hero2.damage = demonSword.damage;
-					demonSwordready = false; 
-				}
+				changeCharacterUsingNewPosFinn(hero2.getPositionRight());
 				hero2.updatePosition(walkingSpeed, 0);
 				steps++;
 			} 
@@ -821,6 +566,66 @@ var update = function (modifier) {
 		}
 	}
 };
+
+function changeCharacterUsingNewPosFern(pos) {
+	switch(pos) {
+		case 70:
+			changeCharactersAppearance(hero1, grass,
+					"characterFern",
+					"pics/fernEquipedGrassSword.png");
+			break;
+		case 71:
+			changeCharactersAppearance(hero1, finnSword,
+					"characterFern",
+					"pics/fernEquipedFinnSword.png");
+			break;
+		case 72:
+			changeCharactersAppearance(hero1, scarletSword,
+					"characterFern",
+					"pics/fernEquipedScarletSword.png");
+			break;
+
+		default:
+			break;
+	}
+};
+
+function changeCharacterUsingNewPosFinn(pos) {
+	switch(pos) {
+		case 70:
+			changeCharactersAppearance(hero2, grass,
+					"characterFinn",
+					"pics/finnEquipedGrassSword.png");
+			break;
+		case 71:
+			changeCharactersAppearance(hero2, finnSword,
+					"characterFinn",
+					"pics/finn_weapon.png");
+			break;
+		case 72:
+			changeCharactersAppearance(hero2, scarletSword,
+					"characterFinn",
+					"pics/finnEquipedScarletSword.png");
+			break;
+		case 73:
+			changeCharactersAppearance(hero2, magicWand,
+					"characterFinn",
+					"pics/finnEquipedMagicWand.png");
+			break;
+		case 74:
+			changeCharactersAppearance(hero2, mushBomb,
+					"characterFinn",
+					"pics/finnEquipedMushBomb.png");
+			break;
+		case 75:
+			changeCharactersAppearance(hero2, demonSword,
+					"characterFinn",
+					"pics/finnEquipedDemonSword.png");
+			break;
+		default:
+			break;
+	}
+}
 
 
 // Draw everything
@@ -896,9 +701,7 @@ var render = function () {
 };
 
 //Affect health bars
-
-
-
+// updateHealthBar
 function healthBarProgress(heroName) {
 	switch (heroName) {
 	case "Fern":
@@ -912,27 +715,69 @@ function healthBarProgress(heroName) {
 						.text(hero2.health + ' %');
         break;
 	default:
-	        break;
+        break;
 	}
 }
 
 
 //Change characters' divs behavior
-
-
-function changeCharactersAppearance(hero, newWeapon) {
+function changeCharactersAppearance(hero, newWeapon, characterDivId, weaponFileSrc) {
+	
+	// reactivate image of the "old" weapon
+	var currentWeapon = hero.weapon;
+	switch(currentWeapon.name) {
+	case "Grass Sword": grassReady = true; break;
+	case "Finn Sword": finnSwordready = true; break;
+	case "Scarlet Sword": scarletSwordready = true; break;
+	case "Magic Wand": magicWandready = true; break;
+	case "Mushroom Bomb": mushBombready = true; break;
+	case "Demon Sword": demonSwordready = true; break;
+	default: break;
+	}
+	
+	// place the "old" weapon on the current position of the hero 
+	// he leave this within this step of the round)
+	map.value[hero.x/60][hero.y/60] = hero.weapon.weaponId;
+	hero.weapon.x = hero.x;
+	hero.weapon.y = hero.y;
+	
+	// set new weapon
 	switch (newWeapon.name)	{
+	case "Grass Sword":
+		hero.weapon = grass;
+		hero.damage = grass.damage;
+		grassReady = false;
+		document.getElementById(characterDivId).src = weaponFileSrc;
+		break;
 	case "Finn Sword":
 		hero.weapon = finnSword;
 		hero.damage = finnSword.damage;
 		finnSwordready = false;
-		document.getElementById("characterFinn").src="pics/finn_weapon.png";
+		document.getElementById(characterDivId).src = weaponFileSrc;
 		break;
 	case "Scarlet Sword":
 		hero2.weapon = scarletSword;
 		hero2.damage = scarletSword.damage;
 		scarletSwordready = false;
-		document.getElementById("characterFinn").src="pics/finnEquipedScarletSword.png";
+		document.getElementById(characterDivId).src = weaponFileSrc;
+		break;
+	case "Magic Wand":
+		hero2.weapon = magicWand;
+		hero2.damage = magicWand.damage;
+		magicWandready = false;
+		document.getElementById(characterDivId).src = weaponFileSrc;
+		break;
+	case "Mushroom Bomb":
+		hero2.weapon = mushBomb;
+		hero2.damage = mushBomb.damage;
+		mushBombready = false;
+		document.getElementById(characterDivId).src = weaponFileSrc;
+		break;
+	case "Demon Sword":
+		hero2.weapon = demonSword;
+		hero2.damage = demonSword.damage;
+		demonSwordready = false;
+		document.getElementById(characterDivId).src = weaponFileSrc;
 		break;
 	default: 
 		break;	
