@@ -584,6 +584,21 @@ function changeCharacterUsingNewPosFern(pos) {
 					"characterFern",
 					"pics/fernEquipedScarletSword.png");
 			break;
+		case 73:
+			changeCharactersAppearance(hero1, magicWand,
+					"characterFern",
+					"pics/fernEquipedMagicWand.png");
+			break;
+		case 74:
+			changeCharactersAppearance(hero1, mushBomb,
+					"characterFern",
+					"pics/fernEquipedMushBomb.png");
+			break;
+		case 75:
+			changeCharactersAppearance(hero1, demonSword,
+					"characterFern",
+					"pics/fernEquipedDemon.png");
+			break;
 
 		default:
 			break;
