@@ -249,7 +249,6 @@ class Hero {
 		map.value[(this.x/60)+1][this.y/60] = value;
 	}
 	
-	
 	updatePosition(x,y) {
 		//peter.updateposition(20,30);
 		/**
@@ -289,13 +288,24 @@ class Hero {
 	}
 	
 	opponentInVicinity() {
-		return 	this.getPositionAbove() == this.heroId ||
-				this.getPositionBelow() == this.heroId ||
-				this.getPositionRight() == this.heroId ||
-				this.getPositionLeft() == this.heroId;
+		if(this.heroId == 88) { // this this hero Finn?
+			// check if Fern is nearby
+			return 	this.getPositionAbove() == 89 ||
+					this.getPositionBelow() == 89 ||
+					this.getPositionRight() == 89 ||
+					this.getPositionLeft() == 89;
+		} else { // no, this hero is not Finn, it's Fern
+			// check if Fern is nearby
+			return 	this.getPositionAbove() == 88 ||
+					this.getPositionBelow() == 88 ||
+					this.getPositionRight() == 88 ||
+					this.getPositionLeft() == 88;
+		}
 	}
-	
 }
+
+
+
 
 var hero1 = new Hero("Fern", 0, 0, 100, 10, hands, false, 88);
 var hero2 = new Hero("Finn", 0, 0, 100, 10, hands, false, 89);
@@ -441,35 +451,45 @@ var update = function (modifier) {
 	// hero1
 	if(playerOnesTurn) {
 		if (38 in keysDown) { // Player holding up
-			if(hero1.getPositionAbove() < 88) {
-				changeCharacterUsingNewPosFern(hero1.getPositionAbove());
-				hero1.updatePosition(0,-walkingSpeed);
-				steps++;
-			} 
+			if(hero1.y != 0) { // hero is not at the upmost part of the map
+				if(hero1.getPositionAbove() < 88) { // no block?
+					// move
+					changeCharacterUsingNewPosFern(hero1.getPositionAbove());
+					hero1.updatePosition(0,-walkingSpeed);
+					steps++;
+				} 
+			}
 			delete keysDown[38];
 
 		} else if (40 in keysDown) { // Player holding down
-			if(hero1.getPositionBelow() < 88) {
-				changeCharacterUsingNewPosFern(hero1.getPositionBelow());
-				hero1.updatePosition(0, walkingSpeed);
-				steps++;
-			} 
+			if(hero1.y/60 != 9) {// hero is not at the lowermost part of the map
+				if(hero1.getPositionBelow() < 88) {
+					changeCharacterUsingNewPosFern(hero1.getPositionBelow());
+					hero1.updatePosition(0, walkingSpeed);
+					steps++;
+				} 
+			}
 			delete keysDown[40];
-			
 		} else if (37 in keysDown) { // Player holding left
-			if(hero1.getPositionLeft() < 88) {
-				changeCharacterUsingNewPosFern(hero1.getPositionLeft());
-				hero1.updatePosition(-walkingSpeed, 0);
-				steps++;
-			} 
+			if(hero1.x != 0) {// hero is not at the leftmost part of the map
+				if(hero1.getPositionLeft() < 88) {
+					changeCharacterUsingNewPosFern(hero1.getPositionLeft());
+					hero1.updatePosition(-walkingSpeed, 0);
+					steps++;
+				} 
+			}
 			delete keysDown[37];
 			
 		} else if (39 in keysDown) { // Player holding right
-			if(hero1.getPositionRight() < 88) {
-				changeCharacterUsingNewPosFern(hero1.getPositionRight());
-				hero1.updatePosition(walkingSpeed, 0);
-				steps++;
-			} 
+			if(hero1.x/60 != 9) {// hero is not at the rightmost part of the map
+				if(hero1.getPositionRight() < 88) {
+					changeCharacterUsingNewPosFern(hero1.getPositionRight());
+					hero1.updatePosition(walkingSpeed, 0);
+					steps++;
+				}
+			} else {
+				// do nothing, maybe a message "can't move"
+			}
 			delete keysDown[39];
 		} else if (191 in keysDown) { // Player 1 deals damage (/)
 			if(hero1.opponentInVicinity()) {
@@ -487,9 +507,9 @@ var update = function (modifier) {
 				steps++;
 			} 
 			delete keysDown[191];
-		} else if (190 in keysDown) { // Player 2 defeats attack(x)
+		} else if (190 in keysDown) { // Player 2 switches blocking mode
 			if(hero1.isBlocking) { // hero currently blocking, restore
-				heros.isBlocking = false;
+				hero1.isBlocking = false;
 				hero1.damage = hero1.damage * 2;
 			} else { // hero currently not blocking, decrease his dmg
 				hero1.isBlocking = true;
@@ -505,32 +525,40 @@ var update = function (modifier) {
 		}
 	} else { // hero2 
 		if (87 in keysDown) { // Player holding up
-			if(hero2.getPositionAbove() < 88) {
+			if(hero2.y != 0) { // hero is not at the upmost part of the map
+				if(hero2.getPositionAbove() < 88) {
 				changeCharacterUsingNewPosFinn(hero2.getPositionAbove());
 				hero2.updatePosition(0,-walkingSpeed);
 				steps++;
 			} 
+		} 	
 			delete keysDown[87];
 		} else if (83 in keysDown) { // Player holding down
-			if(hero2.getPositionBelow() < 88) {
-				changeCharacterUsingNewPosFinn(hero2.getPositionBelow());
-				hero2.updatePosition(0, walkingSpeed);
-				steps++;
-			} 
+			if(hero2.y/60 != 9) {
+				if(hero2.getPositionBelow() < 88) {
+					changeCharacterUsingNewPosFinn(hero2.getPositionBelow());
+					hero2.updatePosition(0, walkingSpeed);
+					steps++;
+				} 
+			} 			
 			delete keysDown[83];
 		} else if (65 in keysDown) { // Player holding left
-			if(hero2.getPositionLeft() < 88) {
-				changeCharacterUsingNewPosFinn(hero2.getPositionLeft());
-				hero2.updatePosition(-walkingSpeed, 0);
-				steps++;
-			} 
+			if(hero2.x != 0) {
+				if(hero2.getPositionLeft() < 88) {
+					changeCharacterUsingNewPosFinn(hero2.getPositionLeft());
+					hero2.updatePosition(-walkingSpeed, 0);
+					steps++;
+				} 
+			} 	
 			delete keysDown[65];
 		} else if (68 in keysDown) { // Player holding right
-			if(hero2.getPositionRight() < 88) {
-				changeCharacterUsingNewPosFinn(hero2.getPositionRight());
-				hero2.updatePosition(walkingSpeed, 0);
-				steps++;
-			} 
+			if(hero2.x/60 != 9) {
+				if(hero2.getPositionRight() < 88) {
+					changeCharacterUsingNewPosFinn(hero2.getPositionRight());
+					hero2.updatePosition(walkingSpeed, 0);
+					steps++;
+				} 
+			} 	 
 			delete keysDown[68];
 		} else if (67 in keysDown) { // Player 2 deals damage (c)
 			if(hero2.opponentInVicinity()) {
@@ -548,7 +576,7 @@ var update = function (modifier) {
 				steps++;
 			} 
 			delete keysDown[67];
-		} else if (88 in keysDown) { // Player 2 defeats attack(x)
+		} else if (88 in keysDown) { // Player 2 switches blocking mode
 			if(hero2.isBlocking) { // hero currently blocking, restore
 				hero2.isBlocking = false;
 				hero2.damage = hero2.damage * 2;
@@ -615,7 +643,7 @@ function changeCharacterUsingNewPosFinn(pos) {
 		case 71:
 			changeCharactersAppearance(hero2, finnSword,
 					"characterFinn",
-					"pics/finn_weapon.png");
+					"pics/finnEquipedFinnSword.png");
 			break;
 		case 72:
 			changeCharactersAppearance(hero2, scarletSword,
@@ -709,7 +737,9 @@ var render = function () {
 		// reset game
 		// more visuals perhaps
 	} else if (hero2.health == 0) {
-		ctx.fillText("hero 1 won.", 32, 228);
+		ctx.rect(0, 0, 600, 600);
+		ctx.fillStyle = 'blue';
+		ctx.fill();
 		// reset game 
 	}
 	
@@ -771,26 +801,26 @@ function changeCharactersAppearance(hero, newWeapon, characterDivId, weaponFileS
 		document.getElementById(characterDivId).src = weaponFileSrc;
 		break;
 	case "Scarlet Sword":
-		hero2.weapon = scarletSword;
-		hero2.damage = scarletSword.damage;
+		hero.weapon = scarletSword;
+		hero.damage = scarletSword.damage;
 		scarletSwordready = false;
 		document.getElementById(characterDivId).src = weaponFileSrc;
 		break;
 	case "Magic Wand":
-		hero2.weapon = magicWand;
-		hero2.damage = magicWand.damage;
+		hero.weapon = magicWand;
+		hero.damage = magicWand.damage;
 		magicWandready = false;
 		document.getElementById(characterDivId).src = weaponFileSrc;
 		break;
 	case "Mushroom Bomb":
-		hero2.weapon = mushBomb;
-		hero2.damage = mushBomb.damage;
+		hero.weapon = mushBomb;
+		hero.damage = mushBomb.damage;
 		mushBombready = false;
 		document.getElementById(characterDivId).src = weaponFileSrc;
 		break;
 	case "Demon Sword":
-		hero2.weapon = demonSword;
-		hero2.damage = demonSword.damage;
+		hero.weapon = demonSword;
+		hero.damage = demonSword.damage;
 		demonSwordready = false;
 		document.getElementById(characterDivId).src = weaponFileSrc;
 		break;
@@ -798,8 +828,11 @@ function changeCharactersAppearance(hero, newWeapon, characterDivId, weaponFileS
 		break;	
 
 	}
-
 }
+
+
+//Game over
+
 
 
 // The main game loop
