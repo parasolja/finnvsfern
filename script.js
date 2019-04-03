@@ -25,6 +25,13 @@ var arrow_keys_handler = function(e) {
 window.addEventListener("keydown", arrow_keys_handler, false);
 
 
+
+$(document).ready(function(){
+	  $("#myBtn").click(function(){
+	    $("#myModal").modal();
+	  });
+	});
+
 /**
  * World/Playingfield construction
  */
@@ -736,10 +743,10 @@ var render = function () {
 		ctx.fillText("hero 2 won.", 32, 228);
 		// reset game
 		// more visuals perhaps
-	} else if (hero2.health == 0) {
-		ctx.rect(0, 0, 600, 600);
-		ctx.fillStyle = 'blue';
-		ctx.fill();
+	} if (hero2.health == 0) {
+		var winnerFernImage = new Image();
+		winnerFernImage.src = "pics/winnerFern.png";
+		ctx.drawImage(winnerFernImage, 0, 0, 600, 600); 
 		// reset game 
 	}
 	
