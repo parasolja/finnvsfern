@@ -35,6 +35,9 @@ h1 {
 	margin-left: 20px;
 }
 
+#myModal {
+	z-index: 1000;
+}
 
 #characterFinn {
 	max-height: 340px;
@@ -61,3 +64,4 @@ h1 {
 #fern {
 	background-color: white;
 }
+

@@ -26,11 +26,6 @@ window.addEventListener("keydown", arrow_keys_handler, false);
 
 
 
-$(document).ready(function(){
-	  $("#myBtn").click(function(){
-	    $("#myModal").modal();
-	  });
-	});
 
 /**
  * World/Playingfield construction
