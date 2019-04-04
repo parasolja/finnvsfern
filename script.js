@@ -26,7 +26,6 @@ window.addEventListener("keydown", arrow_keys_handler, false);
 
 
 
-
 /**
  * World/Playingfield construction
  */
@@ -309,29 +308,29 @@ class Hero {
 
 
 
-var hero1 = new Hero("Fern", 0, 0, 100, 10, hands, false, 88);
-var hero2 = new Hero("Finn", 0, 0, 100, 10, hands, false, 89);
+var finn = new Hero("Finn", 0, 0, 100, 10, hands, false, 88);
+var fern = new Hero("Fern", 0, 0, 100, 10, hands, false, 89);
 
 /**
  * Hero Images
  */
 
 //hero1 image
-var hero1Ready = false;
-var hero1Image = new Image();
-hero1Image.onload = function () {
-	hero1Ready = true;
+var finnReady = false;
+var finnImage = new Image();
+finnImage.onload = function () {
+	finnReady = true;
 };
-hero1Image.src = "pics/fernMini.png";
+finnImage.src = "pics/finnMini.png";
 
 
 // hero2 image
-var hero2Ready = false;
-var hero2Image = new Image();
-hero2Image.onload = function () {
-	hero2Ready = true;
+var fernReady = false;
+var fernImage = new Image();
+fernImage.onload = function () {
+	fernReady = true;
 };
-hero2Image.src = "pics/finnMini.png";
+fernImage.src = "pics/fernMini.png";
 
 
 /**
@@ -434,8 +433,8 @@ var reset = function () {
 	var itemPlacer = new ItemPlacer(); // places items
 	var fcf = new FreeCellFinder(); // finds free cells
 	
-    itemPlacer.place(fcf, hero1, 88, map, contentBoxes);
-    itemPlacer.place(fcf, hero2, 89, map, contentBoxes);
+    itemPlacer.place(fcf, finn, 88, map, contentBoxes);
+    itemPlacer.place(fcf, fern, 89, map, contentBoxes);
     itemPlacer.place(fcf, grass, 70, map, contentBoxes);
     itemPlacer.place(fcf, finnSword, 71, map, contentBoxes);
     itemPlacer.place(fcf, scarletSword, 72, map, contentBoxes);
@@ -453,69 +452,69 @@ var update = function (modifier) {
 	// hero1
 	if(playerOnesTurn) {
 		if (38 in keysDown) { // Player holding up
-			if(hero1.y != 0) { // hero is not at the upmost part of the map
-				if(hero1.getPositionAbove() < 88) { // no block?
+			if(finn.y != 0) { // hero is not at the upmost part of the map
+				if(finn.getPositionAbove() < 88) { // no block?
 					// move
-					changeCharacterUsingNewPosFern(hero1.getPositionAbove());
-					hero1.updatePosition(0,-walkingSpeed);
+					changeCharacterUsingNewPosFinn(finn.getPositionAbove());
+					finn.updatePosition(0,-walkingSpeed);
 					steps++;
 				} 
 			}
 			delete keysDown[38];
 
 		} else if (40 in keysDown) { // Player holding down
-			if(hero1.y/60 != 9) {// hero is not at the lowermost part of the map
-				if(hero1.getPositionBelow() < 88) {
-					changeCharacterUsingNewPosFern(hero1.getPositionBelow());
-					hero1.updatePosition(0, walkingSpeed);
+			if(finn.y/60 != 9) {// hero is not at the lowermost part of the map
+				if(finn.getPositionBelow() < 88) {
+					changeCharacterUsingNewPosFinn(finn.getPositionBelow());
+					finn.updatePosition(0, walkingSpeed);
 					steps++;
 				} 
 			}
 			delete keysDown[40];
 		} else if (37 in keysDown) { // Player holding left
-			if(hero1.x != 0) {// hero is not at the leftmost part of the map
-				if(hero1.getPositionLeft() < 88) {
-					changeCharacterUsingNewPosFern(hero1.getPositionLeft());
-					hero1.updatePosition(-walkingSpeed, 0);
+			if(finn.x != 0) {// hero is not at the leftmost part of the map
+				if(finn.getPositionLeft() < 88) {
+					changeCharacterUsingNewPosFinn(finn.getPositionLeft());
+					finn.updatePosition(-walkingSpeed, 0);
 					steps++;
 				} 
 			}
 			delete keysDown[37];
 			
 		} else if (39 in keysDown) { // Player holding right
-			if(hero1.x/60 != 9) {// hero is not at the rightmost part of the map
-				if(hero1.getPositionRight() < 88) {
-					changeCharacterUsingNewPosFern(hero1.getPositionRight());
-					hero1.updatePosition(walkingSpeed, 0);
+			if(finn.x/60 != 9) {// hero is not at the rightmost part of the map
+				if(finn.getPositionRight() < 88) {
+					changeCharacterUsingNewPosFinn(finn.getPositionRight());
+					finn.updatePosition(walkingSpeed, 0);
 					steps++;
 				}
 			} else {
 				// do nothing, maybe a message "can't move"
 			}
 			delete keysDown[39];
-		} else if (191 in keysDown) { // Player 1 deals damage (/)
-			if(hero1.opponentInVicinity()) {
+		} else if (76 in keysDown) { // Player 1 deals damage (L)
+			if(finn.opponentInVicinity()) {
 				/**
 				 * If the other hero (here hero2) is blocking,
 				 * hero1 attacks deal less damage (hero2 health is
 				 * reduced less). 
 				 */
-				if(hero2.isBlocking) { 
-					hero2.health -= hero1.damage / 2;					
+				if(fern.isBlocking) { 
+					fern.health -= finn.damage / 2;					
 				} else {
-					hero2.health -= hero1.damage;
+					fern.health -= finn.damage;
 				}
-				healthBarProgress(hero2.name);
+				healthBarProgress(fern.name);
 				steps++;
 			} 
-			delete keysDown[191];
+			delete keysDown[76];
 		} else if (190 in keysDown) { // Player 2 switches blocking mode
-			if(hero1.isBlocking) { // hero currently blocking, restore
-				hero1.isBlocking = false;
-				hero1.damage = hero1.damage * 2;
+			if(finn.isBlocking) { // hero currently blocking, restore
+				finn.isBlocking = false;
+				finn.damage = finn.damage * 2;
 			} else { // hero currently not blocking, decrease his dmg
-				hero1.isBlocking = true;
-				hero1.damage = hero1.damage / 2;
+				finn.isBlocking = true;
+				finn.damage = finn.damage / 2;
 			}
 			steps++; 
 			delete keysDown[190];
@@ -527,64 +526,64 @@ var update = function (modifier) {
 		}
 	} else { // hero2 
 		if (87 in keysDown) { // Player holding up
-			if(hero2.y != 0) { // hero is not at the upmost part of the map
-				if(hero2.getPositionAbove() < 88) {
-				changeCharacterUsingNewPosFinn(hero2.getPositionAbove());
-				hero2.updatePosition(0,-walkingSpeed);
+			if(fern.y != 0) { // hero is not at the upmost part of the map
+				if(fern.getPositionAbove() < 88) {
+				changeCharacterUsingNewPosFern(fern.getPositionAbove());
+				fern.updatePosition(0,-walkingSpeed);
 				steps++;
 			} 
 		} 	
 			delete keysDown[87];
 		} else if (83 in keysDown) { // Player holding down
-			if(hero2.y/60 != 9) {
-				if(hero2.getPositionBelow() < 88) {
-					changeCharacterUsingNewPosFinn(hero2.getPositionBelow());
-					hero2.updatePosition(0, walkingSpeed);
+			if(fern.y/60 != 9) {
+				if(fern.getPositionBelow() < 88) {
+					changeCharacterUsingNewPosFern(fern.getPositionBelow());
+					fern.updatePosition(0, walkingSpeed);
 					steps++;
 				} 
 			} 			
 			delete keysDown[83];
 		} else if (65 in keysDown) { // Player holding left
-			if(hero2.x != 0) {
-				if(hero2.getPositionLeft() < 88) {
-					changeCharacterUsingNewPosFinn(hero2.getPositionLeft());
-					hero2.updatePosition(-walkingSpeed, 0);
+			if(fern.x != 0) {
+				if(fern.getPositionLeft() < 88) {
+					changeCharacterUsingNewPosFern(fern.getPositionLeft());
+					fern.updatePosition(-walkingSpeed, 0);
 					steps++;
 				} 
 			} 	
 			delete keysDown[65];
 		} else if (68 in keysDown) { // Player holding right
-			if(hero2.x/60 != 9) {
-				if(hero2.getPositionRight() < 88) {
-					changeCharacterUsingNewPosFinn(hero2.getPositionRight());
-					hero2.updatePosition(walkingSpeed, 0);
+			if(fern.x/60 != 9) {
+				if(fern.getPositionRight() < 88) {
+					changeCharacterUsingNewPosFern(fern.getPositionRight());
+					fern.updatePosition(walkingSpeed, 0);
 					steps++;
 				} 
 			} 	 
 			delete keysDown[68];
 		} else if (67 in keysDown) { // Player 2 deals damage (c)
-			if(hero2.opponentInVicinity()) {
+			if(fern.opponentInVicinity()) {
 				/**
 				 * If the other hero (here hero1) is blocking,
 				 * hero2 attacks deal less damage (hero1 health is
 				 * reduced less). 
 				 */
-				if(hero1.isBlocking) { 
-					hero1.health -= hero2.damage / 2;					
+				if(finn.isBlocking) { 
+					finn.health -= fern.damage / 2;					
 				} else {
-					hero1.health -= hero2.damage;
+					finn.health -= fern.damage;
 				}
-				healthBarProgress(hero1.name);
+				healthBarProgress(finn.name);
 				steps++;
 			} 
 			delete keysDown[67];
 		} else if (88 in keysDown) { // Player 2 switches blocking mode
-			if(hero2.isBlocking) { // hero currently blocking, restore
-				hero2.isBlocking = false;
-				hero2.damage = hero2.damage * 2;
+			if(fern.isBlocking) { // hero currently blocking, restore
+				fern.isBlocking = false;
+				fern.damage = fern.damage * 2;
 			} else { // hero currently not blocking, decrease his dmg
-				hero2.isBlocking = true;
-				hero2.damage = hero2.damage / 2;
+				fern.isBlocking = true;
+				fern.damage = fern.damage / 2;
 			}
 			steps++; 
 			delete keysDown[88];
@@ -597,37 +596,51 @@ var update = function (modifier) {
 	}
 };
 
-function changeCharacterUsingNewPosFern(pos) {
+//Weapons Sounds
+var swordSound = new Audio("sounds/sword.mp3");
+swordSound.volume = 0.1;
+var magicWandSound = new Audio("sounds/magicwand.mp3");
+magicWandSound.volume = 0.1;
+var mushBombSound = new Audio("sounds/bomb.mp3");
+mushBombSound.volume = 0.1;
+
+function changeCharacterUsingNewPosFinn(pos) {
 	switch(pos) {
 		case 70:
-			changeCharactersAppearance(hero1, grass,
-					"characterFern",
-					"pics/fernEquipedGrassSword.png");
+			changeCharactersAppearance(finn, grass,
+					"characterFinn",
+					"pics/finnEquipedGrassSword.png");
+			 swordSound.play(); 
 			break;
 		case 71:
-			changeCharactersAppearance(hero1, finnSword,
-					"characterFern",
-					"pics/fernEquipedFinnSword.png");
+			changeCharactersAppearance(finn, finnSword,
+					"characterFinn",
+					"pics/finnEquipedFinnSword.png");
+			swordSound.play(); 
 			break;
 		case 72:
-			changeCharactersAppearance(hero1, scarletSword,
-					"characterFern",
-					"pics/fernEquipedScarletSword.png");
+			changeCharactersAppearance(finn, scarletSword,
+					"characterFinn",
+					"pics/finnEquipedScarletSword.png");
+			swordSound.play(); 
 			break;
 		case 73:
-			changeCharactersAppearance(hero1, magicWand,
-					"characterFern",
-					"pics/fernEquipedMagicWand.png");
+			changeCharactersAppearance(finn, magicWand,
+					"characterFinn",
+					"pics/finnEquipedMagicWand.png");
+			magicWandSound.play(); 
 			break;
 		case 74:
-			changeCharactersAppearance(hero1, mushBomb,
-					"characterFern",
-					"pics/fernEquipedMushBomb.png");
+			changeCharactersAppearance(finn, mushBomb,
+					"characterFinn",
+					"pics/finnEquipedMushBomb.png");
+			mushBombSound.play(); 
 			break;
 		case 75:
-			changeCharactersAppearance(hero1, demonSword,
-					"characterFern",
-					"pics/fernEquipedDemon.png");
+			changeCharactersAppearance(finn, demonSword,
+					"characterFinn",
+					"pics/finnEquipedDemonSword.png");
+			swordSound.play(); 
 			break;
 
 		default:
@@ -635,37 +648,43 @@ function changeCharacterUsingNewPosFern(pos) {
 	}
 };
 
-function changeCharacterUsingNewPosFinn(pos) {
+function changeCharacterUsingNewPosFern(pos) {
 	switch(pos) {
 		case 70:
-			changeCharactersAppearance(hero2, grass,
-					"characterFinn",
-					"pics/finnEquipedGrassSword.png");
+			changeCharactersAppearance(fern, grass,
+					"characterFern",
+					"pics/fernEquipedGrassSword.png");
+			swordSound.play(); 
 			break;
 		case 71:
-			changeCharactersAppearance(hero2, finnSword,
-					"characterFinn",
-					"pics/finnEquipedFinnSword.png");
+			changeCharactersAppearance(fern, finnSword,
+					"characterFern",
+					"pics/fernEquipedFinnSword.png");
+			swordSound.play(); 
 			break;
 		case 72:
-			changeCharactersAppearance(hero2, scarletSword,
-					"characterFinn",
-					"pics/finnEquipedScarletSword.png");
+			changeCharactersAppearance(fern, scarletSword,
+					"characterFern",
+					"pics/fernEquipedScarletSword.png");
+			swordSound.play(); 
 			break;
 		case 73:
-			changeCharactersAppearance(hero2, magicWand,
-					"characterFinn",
-					"pics/finnEquipedMagicWand.png");
+			changeCharactersAppearance(fern, magicWand,
+					"characterFern",
+					"pics/fernEquipedMagicWand.png");
+			magicWandSound.play();
 			break;
 		case 74:
-			changeCharactersAppearance(hero2, mushBomb,
-					"characterFinn",
-					"pics/finnEquipedMushBomb.png");
+			changeCharactersAppearance(fern, mushBomb,
+					"characterFern",
+					"pics/fernEquipedMushBomb.png");
+			mushBombSound.play();
 			break;
 		case 75:
-			changeCharactersAppearance(hero2, demonSword,
-					"characterFinn",
-					"pics/finnEquipedDemonSword.png");
+			changeCharactersAppearance(fern, demonSword,
+					"characterFern",
+					"pics/fernEquipedDemon.png");
+			swordSound.play(); 
 			break;
 		default:
 			break;
@@ -679,12 +698,12 @@ var render = function () {
 		ctx.drawImage(bgImage, 0, 0);
 	}
 
-	if (hero1Ready) {
-		ctx.drawImage(hero1Image, hero1.x, hero1.y);
+	if (finnReady) {
+		ctx.drawImage(finnImage, finn.x, finn.y);
 	}
 
-	if (hero2Ready) {
-		ctx.drawImage(hero2Image, hero2.x, hero2.y);
+	if (fernReady) {
+		ctx.drawImage(fernImage, fern.x, fern.y);
 	}
 	
 	if (rockReady) {
@@ -719,29 +738,34 @@ var render = function () {
 	
 	// Score
 	ctx.fillStyle = "rgb(250, 250, 250)";
-	ctx.font = "24px Helvetica";
+	ctx.font = "14px Helvetica";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	if(playerOnesTurn) {
-		ctx.fillText("It's hero1's turn.", 32, 32);
+		ctx.fillText("It's Finn's turn.", 32, 32);
 	} else {
-		ctx.fillText("It's hero2's turn.", 32, 32);
+		ctx.fillText("It's Fern's turn.", 32, 32);
 	}
 	ctx.fillText("steps: " + steps, 32, 64);
-	ctx.fillText("hero 1 health: " + hero1.health, 32, 96);
-	ctx.fillText("hero 1 damage: " + hero1.damage, 32, 128);
-	ctx.fillText("hero 2 health: " + hero2.health, 32, 160);
-	ctx.fillText("hero 2 damage: " + hero2.damage, 32, 196);
+	ctx.fillText("Finn's health: " + finn.health, 32, 96);
+	ctx.fillText("Finn's damage: " + finn.damage, 32, 128);
+	ctx.fillText("Fern's health: " + fern.health, 32, 160);
+	ctx.fillText("Fern's damage: " + fern.damage, 32, 196);
 	
 	
-	if(hero1.health == 0) {
-		ctx.fillText("hero 2 won.", 32, 228);
-		// reset game
-		// more visuals perhaps
-	} if (hero2.health == 0) {
+	if(finn.health == 0) {
+		$(document).off('keydown');
 		var winnerFernImage = new Image();
 		winnerFernImage.src = "pics/winnerFern.png";
 		ctx.drawImage(winnerFernImage, 0, 0, 600, 600); 
+		
+		// reset game
+		// more visuals perhaps
+	} if (fern.health == 0) {
+		$(document).off('keydown');
+		var winnerFinnImage = new Image();
+		winnerFinnImage.src = "pics/winnerFinn.png";
+		ctx.drawImage(winnerFinnImage, 0, 0, 600, 600); 
 		// reset game 
 	}
 	
@@ -751,15 +775,15 @@ var render = function () {
 // updateHealthBar
 function healthBarProgress(heroName) {
 	switch (heroName) {
-	case "Fern":
-		$("#healthFern").css('width', hero1.health +'%')
-						.attr('aria-valuenow', hero1.health)
-						.text(hero1.health + ' %');
-        break;
 	case "Finn":
-		$("#healthFinn").css('width', hero2.health +'%')
-						.attr('aria-valuenow', hero2.health)
-						.text(hero2.health + ' %');
+		$("#healthFinn").css('width', finn.health +'%')
+						.attr('aria-valuenow', finn.health)
+						.text(finn.health + ' %');
+        break;
+	case "Fern":
+		$("#healthFern").css('width', fern.health +'%')
+						.attr('aria-valuenow', fern.health)
+						.text(fern.health + ' %');
         break;
 	default:
         break;
