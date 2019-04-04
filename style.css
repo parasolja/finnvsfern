@@ -18,8 +18,12 @@ h1 {
 	text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 
+.row {
+	margin: 0px;
+}
+
 #main {
-	min-height: 900px;
+	min-height: 700px;
 }
 
 #buttonRow {
@@ -41,10 +45,27 @@ h1 {
 
 #characterFinn {
 	max-height: 340px;
+	background-color: pink;
+}
+
+#scoreFinn {
+	height: 200px;
+	width: 200px;
+	background-color: pink;
+	padding: 5px;
+}
+
+#scoreFern {
+	height: 200px;
+	width: 200px;
+	background-color: pink;
+	border-color: blue;
+	
 }
 
 #characterFern {
 	max-height: 340px;
+	background-color: pink;
 }
 
 #finn {
@@ -57,11 +78,24 @@ h1 {
 	margin: 30px 50px;
 }
 
-#board {
+#boardContainer {
 	background-color: white;
+	max-height: 700px;
 }
 
 #fern {
 	background-color: white;
 }
 
+#displayMessage {
+	height: 200px;
+	width: 600px;
+	overflow: scroll;
+	border: 1px solid #ccc;
+	margin-left: 20px;
+}
+
+#footer {
+	background-image: url("pics/mood.png");
+	min-height: 200px;
+}

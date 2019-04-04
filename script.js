@@ -611,36 +611,43 @@ function changeCharacterUsingNewPosFinn(pos) {
 					"characterFinn",
 					"pics/finnEquipedGrassSword.png");
 			 swordSound.play(); 
+			 appendToLog("Finn picked up the Grass Sword");
+			 appendFinnLog("Wow! Finn");
 			break;
 		case 71:
 			changeCharactersAppearance(finn, finnSword,
 					"characterFinn",
 					"pics/finnEquipedFinnSword.png");
 			swordSound.play(); 
+			appendToLog("Finn picked up the Finn's Sword");
 			break;
 		case 72:
 			changeCharactersAppearance(finn, scarletSword,
 					"characterFinn",
 					"pics/finnEquipedScarletSword.png");
 			swordSound.play(); 
+			appendToLog("Finn picked up the Scarlet Sword");
 			break;
 		case 73:
 			changeCharactersAppearance(finn, magicWand,
 					"characterFinn",
 					"pics/finnEquipedMagicWand.png");
 			magicWandSound.play(); 
+			appendToLog("Finn picked up the Magic Wand");
 			break;
 		case 74:
 			changeCharactersAppearance(finn, mushBomb,
 					"characterFinn",
 					"pics/finnEquipedMushBomb.png");
 			mushBombSound.play(); 
+			appendToLog("Finn picked up the Mushroom Bomb");
 			break;
 		case 75:
 			changeCharactersAppearance(finn, demonSword,
 					"characterFinn",
 					"pics/finnEquipedDemonSword.png");
 			swordSound.play(); 
+			appendToLog("Finn picked up the Demon Sword");
 			break;
 
 		default:
@@ -655,36 +662,42 @@ function changeCharacterUsingNewPosFern(pos) {
 					"characterFern",
 					"pics/fernEquipedGrassSword.png");
 			swordSound.play(); 
+			appendToLog("Fern picked up the Grass Sword");
 			break;
 		case 71:
 			changeCharactersAppearance(fern, finnSword,
 					"characterFern",
 					"pics/fernEquipedFinnSword.png");
 			swordSound.play(); 
+			appendToLog("Fern picked up the Finn's Sword");
 			break;
 		case 72:
 			changeCharactersAppearance(fern, scarletSword,
 					"characterFern",
 					"pics/fernEquipedScarletSword.png");
 			swordSound.play(); 
+			appendToLog("Fern picked up the Scarlet Sword");
 			break;
 		case 73:
 			changeCharactersAppearance(fern, magicWand,
 					"characterFern",
 					"pics/fernEquipedMagicWand.png");
 			magicWandSound.play();
+			appendToLog("Fern picked up the Magic Wand");
 			break;
 		case 74:
 			changeCharactersAppearance(fern, mushBomb,
 					"characterFern",
 					"pics/fernEquipedMushBomb.png");
 			mushBombSound.play();
+			appendToLog("Fern picked up the Mushroom Bomb");
 			break;
 		case 75:
 			changeCharactersAppearance(fern, demonSword,
 					"characterFern",
 					"pics/fernEquipedDemon.png");
 			swordSound.play(); 
+			appendToLog("Fern picked up the Demon Sword");
 			break;
 		default:
 			break;
@@ -742,13 +755,13 @@ var render = function () {
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	if(playerOnesTurn) {
-		ctx.fillText("It's Finn's turn.", 32, 32);
+		ctx.fillText("It's Finn's turn", 32, 32);
 	} else {
-		ctx.fillText("It's Fern's turn.", 32, 32);
+		ctx.fillText("It's Fern's turn", 32, 32);
 	}
 	ctx.fillText("steps: " + steps, 32, 64);
 	ctx.fillText("Finn's health: " + finn.health, 32, 96);
-	ctx.fillText("Finn's damage: " + finn.damage, 32, 128);
+	ctx.fillText("Finn can cause "  + finn.damage + " points damage", 32, 128);
 	ctx.fillText("Fern's health: " + fern.health, 32, 160);
 	ctx.fillText("Fern's damage: " + fern.damage, 32, 196);
 	
@@ -757,7 +770,9 @@ var render = function () {
 		$(document).off('keydown');
 		var winnerFernImage = new Image();
 		winnerFernImage.src = "pics/winnerFern.png";
-		ctx.drawImage(winnerFernImage, 0, 0, 600, 600); 
+		ctx.drawImage(winnerFernImage, 0, 0, 600, 600);
+		appendToLog("Game over! Fern is the winner");
+	
 		
 		// reset game
 		// more visuals perhaps
@@ -766,10 +781,34 @@ var render = function () {
 		var winnerFinnImage = new Image();
 		winnerFinnImage.src = "pics/winnerFinn.png";
 		ctx.drawImage(winnerFinnImage, 0, 0, 600, 600); 
+		appendToLog("Game over! Finn is the winner");
 		// reset game 
 	}
 	
 };
+
+//Game log
+
+
+function appendToLog(message) {
+	var log = document.getElementById("displayMessage");
+	var newLineContainer = document.createElement("p");
+	var newLine = document.createTextNode(message);
+	//	text.textContent = displayMessage.text; // Define its text content
+    newLineContainer.appendChild(newLine);
+	log.appendChild(newLineContainer); // Insert the new element 
+    log.scrollTop = newLineContainer.offsetHeight + newLineContainer.offsetTop; 
+}
+
+function appendFinnLog(message) {
+	var log = document.getElementById("scoreFinn");
+	var newLineContainer = document.createElement("p");
+	var newLine = document.createTextNode(message);
+	//	text.textContent = displayMessage.text; // Define its text content
+    newLineContainer.appendChild(newLine);
+	log.appendChild(newLineContainer); // Insert the new element 
+    log.scrollTop = newLineContainer.offsetHeight + newLineContainer.offsetTop; 
+}
 
 //Affect health bars
 // updateHealthBar
@@ -857,7 +896,6 @@ function changeCharactersAppearance(hero, newWeapon, characterDivId, weaponFileS
 }
 
 
-//Game over
 
 
 
