@@ -506,9 +506,10 @@ var update = function (modifier) {
 				}
 				healthBarProgress(fern.name);
 				steps++;
+				appendToLog("Finn just attacked Fern and caused " + finn.damage + " points damage");
 			} 
 			delete keysDown[76];
-		} else if (190 in keysDown) { // Player 2 switches blocking mode
+		} else if (190 in keysDown) { // Fern switches blocking mode
 			if(finn.isBlocking) { // hero currently blocking, restore
 				finn.isBlocking = false;
 				finn.damage = finn.damage * 2;
@@ -575,6 +576,7 @@ var update = function (modifier) {
 				}
 				healthBarProgress(finn.name);
 				steps++;
+				appendToLog("Fern just attacked Finn and caused " + fern.damage + " points damage");
 			} 
 			delete keysDown[67];
 		} else if (88 in keysDown) { // Player 2 switches blocking mode
@@ -611,43 +613,42 @@ function changeCharacterUsingNewPosFinn(pos) {
 					"characterFinn",
 					"pics/finnEquipedGrassSword.png");
 			 swordSound.play(); 
-			 appendToLog("Finn picked up the Grass Sword");
-			 appendFinnLog("Wow! Finn");
+			 appendToLog("Finn picked up the Grass Sword. Now he can cause 20 points damage.");
 			break;
 		case 71:
 			changeCharactersAppearance(finn, finnSword,
 					"characterFinn",
 					"pics/finnEquipedFinnSword.png");
 			swordSound.play(); 
-			appendToLog("Finn picked up the Finn's Sword");
+			appendToLog("Finn picked up the Finn's Sword. Now he can cause 20 points damage.");
 			break;
 		case 72:
 			changeCharactersAppearance(finn, scarletSword,
 					"characterFinn",
 					"pics/finnEquipedScarletSword.png");
 			swordSound.play(); 
-			appendToLog("Finn picked up the Scarlet Sword");
+			appendToLog("Finn picked up the Scarlet Sword. Now he can cause 20 points damage.");
 			break;
 		case 73:
 			changeCharactersAppearance(finn, magicWand,
 					"characterFinn",
 					"pics/finnEquipedMagicWand.png");
 			magicWandSound.play(); 
-			appendToLog("Finn picked up the Magic Wand");
+			appendToLog("Finn picked up the Magic Wand. Now he can cause 30 points damage.");
 			break;
 		case 74:
 			changeCharactersAppearance(finn, mushBomb,
 					"characterFinn",
 					"pics/finnEquipedMushBomb.png");
 			mushBombSound.play(); 
-			appendToLog("Finn picked up the Mushroom Bomb");
+			appendToLog("Finn picked up the Mushroom Bomb. Now he can cause 40 points damage.");
 			break;
 		case 75:
 			changeCharactersAppearance(finn, demonSword,
 					"characterFinn",
 					"pics/finnEquipedDemonSword.png");
 			swordSound.play(); 
-			appendToLog("Finn picked up the Demon Sword");
+			appendToLog("Finn picked up the Demon Sword. Now he can cause 20 points damage.");
 			break;
 
 		default:
@@ -662,42 +663,42 @@ function changeCharacterUsingNewPosFern(pos) {
 					"characterFern",
 					"pics/fernEquipedGrassSword.png");
 			swordSound.play(); 
-			appendToLog("Fern picked up the Grass Sword");
+			appendToLog("Fern picked up the Grass Sword. Now he can cause 20 points damage.");
 			break;
 		case 71:
 			changeCharactersAppearance(fern, finnSword,
 					"characterFern",
 					"pics/fernEquipedFinnSword.png");
 			swordSound.play(); 
-			appendToLog("Fern picked up the Finn's Sword");
+			appendToLog("Fern picked up the Finn's Sword. Now he can cause 20 points damage.");
 			break;
 		case 72:
 			changeCharactersAppearance(fern, scarletSword,
 					"characterFern",
 					"pics/fernEquipedScarletSword.png");
 			swordSound.play(); 
-			appendToLog("Fern picked up the Scarlet Sword");
+			appendToLog("Fern picked up the Scarlet Sword. Now he can cause 20 points damage.");
 			break;
 		case 73:
 			changeCharactersAppearance(fern, magicWand,
 					"characterFern",
 					"pics/fernEquipedMagicWand.png");
 			magicWandSound.play();
-			appendToLog("Fern picked up the Magic Wand");
+			appendToLog("Fern picked up the Magic Wand. Now he can cause 30 points damage.");
 			break;
 		case 74:
 			changeCharactersAppearance(fern, mushBomb,
 					"characterFern",
 					"pics/fernEquipedMushBomb.png");
 			mushBombSound.play();
-			appendToLog("Fern picked up the Mushroom Bomb");
+			appendToLog("Fern picked up the Mushroom Bomb. Now he can cause 40 points damage.");
 			break;
 		case 75:
 			changeCharactersAppearance(fern, demonSword,
 					"characterFern",
 					"pics/fernEquipedDemon.png");
 			swordSound.play(); 
-			appendToLog("Fern picked up the Demon Sword");
+			appendToLog("Fern picked up the Demon Sword. Now he can cause 20 points damage.");
 			break;
 		default:
 			break;
@@ -751,25 +752,22 @@ var render = function () {
 	
 	// Score
 	ctx.fillStyle = "rgb(250, 250, 250)";
-	ctx.font = "14px Helvetica";
+	ctx.font = "14px bold Helvetica";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	if(playerOnesTurn) {
-		ctx.fillText("It's Finn's turn", 32, 32);
+		ctx.fillText("It's Finn's turn", 10, 10);
 	} else {
-		ctx.fillText("It's Fern's turn", 32, 32);
+		ctx.fillText("It's Fern's turn", 10, 10);
 	}
-	ctx.fillText("steps: " + steps, 32, 64);
-	ctx.fillText("Finn's health: " + finn.health, 32, 96);
-	ctx.fillText("Finn can cause "  + finn.damage + " points damage", 32, 128);
-	ctx.fillText("Fern's health: " + fern.health, 32, 160);
-	ctx.fillText("Fern's damage: " + fern.damage, 32, 196);
-	
-	
+	ctx.fillText("Steps made: " + steps, 150, 10);
+	ctx.fillText("Finn: "  + finn.damage, 350, 10);
+	ctx.fillText("Fern: "  + fern.damage, 500, 10);
+
 	if(finn.health == 0) {
-		$(document).off('keydown');
+		$(document).off(keysDown);
 		var winnerFernImage = new Image();
-		winnerFernImage.src = "pics/winnerFern.png";
+		winnerFernImage.src = "pics/winnerFern2.png";
 		ctx.drawImage(winnerFernImage, 0, 0, 600, 600);
 		appendToLog("Game over! Fern is the winner");
 	
@@ -777,11 +775,12 @@ var render = function () {
 		// reset game
 		// more visuals perhaps
 	} if (fern.health == 0) {
-		$(document).off('keydown');
+		$(document).off(keysDown);
 		var winnerFinnImage = new Image();
-		winnerFinnImage.src = "pics/winnerFinn.png";
+		winnerFinnImage.src = "pics/winnerFinn2.png";
 		ctx.drawImage(winnerFinnImage, 0, 0, 600, 600); 
 		appendToLog("Game over! Finn is the winner");
+		
 		// reset game 
 	}
 	
@@ -800,15 +799,6 @@ function appendToLog(message) {
     log.scrollTop = newLineContainer.offsetHeight + newLineContainer.offsetTop; 
 }
 
-function appendFinnLog(message) {
-	var log = document.getElementById("scoreFinn");
-	var newLineContainer = document.createElement("p");
-	var newLine = document.createTextNode(message);
-	//	text.textContent = displayMessage.text; // Define its text content
-    newLineContainer.appendChild(newLine);
-	log.appendChild(newLineContainer); // Insert the new element 
-    log.scrollTop = newLineContainer.offsetHeight + newLineContainer.offsetTop; 
-}
 
 //Affect health bars
 // updateHealthBar
