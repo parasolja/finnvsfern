@@ -20,66 +20,134 @@
 			<div class="offset-3"></div>
 			<h1> Finn vs. Fern Game</h1>
 		</div>
+		<div class="conteiner-fluid">
+			<div class="row" id="buttonRow">
+				<div class="offset-3"></div>
+				<div class="col-6">
+					<button type="button" class="btn btn-primary"
+						data-toggle="modal" data-target=".bs-example-modal-new">How to
+						Play?</button>
+					<div class="modal fade bs-example-modal-new" tabindex="-1"
+						role="dialog" aria-labelledby="myLargeModalLabel"
+						aria-hidden="true">
 
-		<div class="row" id="buttonRow">
-			<div class="offset-3"></div>
-			<div class="col-6">
-				<button type="button" class="btn btn-primary"
-					data-toggle="modal" data-target=".bs-example-modal-new">How to
-					Play?</button>
-				<div class="modal fade bs-example-modal-new" tabindex="-1"
-					role="dialog" aria-labelledby="myLargeModalLabel"
-					aria-hidden="true">
+						<div class="modal-dialog">
 
-					<div class="modal-dialog">
+							<!-- Modal Content: begins -->
+							<div class="modal-content">
 
-						<!-- Modal Content: begins -->
-						<div class="modal-content">
-
-							<!-- Modal Header -->
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal"
-									aria-label="Close">
-									<span aria-hidden="true">&times;
-									</span>
-								</button>
-								<h4 class="modal-title" id="gridSystemModalLabel"></h4>
-							</div>
-
-							<!-- Modal Body -->
-							<div class="modal-body">
-								<div class="body-message">
-									<h4>Any Heading</h4>
-									<p>And a paragraph with a full sentence or something else...</p>
+								<!-- Modal Header -->
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"
+										aria-label="Close">
+										<span aria-hidden="true">&times;
+										</span>
+									</button>
+									<h4 class="modal-title" id="gridSystemModalLabel"></h4>
 								</div>
-							</div>
 
-							<!-- Modal Footer -->
-							<div class="modal-footer">
-								<button type="button" class="btn btn-primary"
-									data-dismiss="modal">Close</button>
+								<!-- Modal Body -->
+								<div class="modal-body">
+									<div class="body-message">
+										<h4>Welcome to Finn vs Fern Game!</h4>
+										<h5>Meet the characters</h5>
+										<p>
+											<span style="color:blue;">Finn</span>
+											- is the main protagonist of the series Adventure Time. Finn
+											is a 5-foot tall teenage human with a beutiful blond hair.
+										</p>
+										<p>
+											<span style="color:green;">Fern</span>
+											- was the result of Finn's Grass Sword and Finn Sword merging
+											into one being. And he's a major antagonist.
+										</p>
+										<h5>Weapons & Hay Boxes</h5>
+										<p>
+											Every character is able to pick up one of the available
+											weapons. The weapons are randomly located all over the map.
+											After picking up a new weapon, the previous weapon will b
+											left behind.
+											The default weapon is hands, they can cause
+											<span style="color:green;">10</span>
+											points damage.
+										</p>
+										<p>
+											<img src="pics/grass.png" class="minified"></img>
+											- Grass Sword. Can cause
+											<span style="color:green;">20</span>
+											points damage.
+										</p>
+										<p>
+											<img src="pics/finnsword.png" class="minified"></img>
+											- Finn Sword. Can cause
+											<span style="color:green;">20</span>
+											points damage.
+										</p>
+										<p>
+											<img src="pics/scarlet.png" class="minified"></img>
+											- Scarlet Sword. Can cause
+											<span style="color:green;">20</span>
+											points damage.
+										</p>
+										<p>
+											<img src="pics/demon.png" class="minified"></img>
+											- Demon Sword. Can cause
+											<span style="color:green;">20</span>
+											points damage.
+										</p>
+										<p>
+											<img src="pics/star.png" class="minified"></img>
+											- Magic Wand. Can cause
+											<span style="color:orange;">30</span>
+											points damage.
+										</p>
+										<p>
+											<img src="pics/mbomb.png" class="minified"></img>
+											- Mushroom Bomb. Can cause
+											<span style="color:red;">40</span>
+											points damage.
+										</p>
+										<p>
+											<img src="pics/hay.png" class="minified"></img>
+											- the characters can't walk on hay boxes
+										</p>
+										<h5>Rules</h5>
+										<p>1. Every character is able to move three steps horizontally
+											or vertically at a time. To see whose turn is next, just look
+											on the very top of the game screen.</p>
+										<p>2. The blocking mode reduces the damage to 50%, but also
+											does the same with the attack power.</p>
+										<p>3. As soon as one of the character's health bar is reached
+											0 the game is over, to play again please refresh the page and
+											enjoy!.</p>
+									</div>
+								</div>
+
+								<!-- Modal Footer -->
+								<div class="modal-footer">
+									<button type="button" class="btn btn-primary"
+										data-dismiss="modal">Close</button>
+								</div>
+
 							</div>
+							<!-- Modal Content: ends -->
 
 						</div>
-						<!-- Modal Content: ends -->
 
 					</div>
 
+					<button onclick="musicOn()" type="button"
+						class="btn btn-primary" id="musicOn">Music On</button>
+					<audio id="soundtrack">
+						<source src="soundtrack.mp3" type="audio/mpeg"></source>
+					</audio>
+					<button onclick="musicOff()" type="button"
+						class="btn btn-primary" id="musicOff">Music Off</button>
 				</div>
-
-				<button onclick="musicOn()" type="button"
-					class="btn btn-primary" id="musicOn">Music On</button>
-				<audio id="soundtrack">
-					<source src="soundtrack.mp3" type="audio/mpeg"></source>
-				</audio>
-				<button onclick="musicOff()" type="button"
-					class="btn btn-primary" id="musicOff">Music Off</button>
 			</div>
-		</div>
 
-		<div class="container-fluid">
 			<div class="row" id="main">
-				<div class="col-3" id="finn">
+				<div class="col-sm-3 p-4" id="finn">
 					<div class="row justify-content-center">
 						<h2 class="">Finn</h2>
 					</div>
@@ -97,12 +165,26 @@
 						</div>
 					</div>
 					<div class="row justify-content-center">
-						<div id="scoreFinn">ffffffffffffffffffffffffffffffffffff</div>
+						<div class="col-sm-5">
+							<img src="pics/attackFinn.png" id="attackFinn"></img>
+						</div>
+						<div class="col-sm-5 offset-sm-1">
+							<img src="pics/blockFinn.png" id="blockFinn"></img>
+						</div>
+					</div>
+					<div class="row justify-content-center">
+						<p class="col-sm-6 text-center">Attack</p>
+						<p class="col-sm-6 text-center">Block</p>
+					</div>
+					<div class="row justify-content-center">
+						<div class="col-sm-8 offset-sm-2">
+							<img src="pics/navigateFinn.png"></img>
+						</div>
 					</div>
 				</div>
 				<div id="boardContainer" class="col-6" align="center">
 				</div>
-				<div class="col-3" id="fern">
+				<div class="col-sm-3 p-4" id="fern">
 					<div class="row justify-content-center">
 						<h2>Fern</h2>
 					</div>
@@ -120,23 +202,42 @@
 						</div>
 					</div>
 					<div class="row justify-content-center">
-						<div id="scoreFern">ffffffffffffffffffffffffffffffffffff</div>
+						<div class="col-sm-5">
+							<img src="pics/attackFern.png" id="attackFern"></img>
+						</div>
+						<div class="col-sm-5 offset-sm-1">
+							<img src="pics/blockFern.png" id="blockFinn"></img>
+						</div>
+					</div>
+					<div class="row justify-content-center">
+						<p class="col-sm-6 text-center">Attack</p>
+						<p class="col-sm-6 text-center">Block</p>
+					</div>
+					<div class="row justify-content-center">
+						<div class="col-sm-8 offset-sm-2">
+							<img src="pics/navigateFern.png"></img>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="row" id="gameLog">
-			<div class="col-2">
-				<img id="jake" src="pics/jake.png"></img>
-			</div>
-			<div class="col-2">
-				<div class="box1 sb6">I'm speech bubble</div>
 
-			</div>
+			<div class="row" id="gameLog">
+				<div class="col-1">
+					<img id="jake" src="pics/jake.png"></img>
+				</div>
+				<div class="col-2">
+					<div class="box1 sb7">Hey, check out main game events in this game
+						history!</div>
+
+				</div>
 
 
-			<div class="col-6">
-				<div id="displayMessage">
+				<div class="col-6">
+					<div id="displayMessage">
+					</div>
+				</div>
+				<div class="col-2">
+					<img id="bmo" src="pics/bmo.png"></img>
 				</div>
 			</div>
 		</div>

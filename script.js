@@ -509,7 +509,7 @@ var update = function (modifier) {
 				appendToLog("Finn just attacked Fern and caused " + finn.damage + " points damage");
 			} 
 			delete keysDown[76];
-		} else if (190 in keysDown) { // Fern switches blocking mode
+		} else if (79 in keysDown) { // O Finn switches blocking mode (O)
 			if(finn.isBlocking) { // hero currently blocking, restore
 				finn.isBlocking = false;
 				finn.damage = finn.damage * 2;
@@ -518,7 +518,7 @@ var update = function (modifier) {
 				finn.damage = finn.damage / 2;
 			}
 			steps++; 
-			delete keysDown[190];
+			delete keysDown[79];
 		}
 		
 		if(steps == 3) {
@@ -579,7 +579,7 @@ var update = function (modifier) {
 				appendToLog("Fern just attacked Finn and caused " + fern.damage + " points damage");
 			} 
 			delete keysDown[67];
-		} else if (88 in keysDown) { // Player 2 switches blocking mode
+		} else if (88 in keysDown) { // Fern switches blocking mode (X)
 			if(fern.isBlocking) { // hero currently blocking, restore
 				fern.isBlocking = false;
 				fern.damage = fern.damage * 2;
@@ -705,7 +705,7 @@ function changeCharacterUsingNewPosFern(pos) {
 	}
 }
 
-
+var winnerWasFound = false;
 // Draw everything
 var render = function () {
 	if (bgReady) {
@@ -764,25 +764,37 @@ var render = function () {
 	ctx.fillText("Finn: "  + finn.damage, 350, 10);
 	ctx.fillText("Fern: "  + fern.damage, 500, 10);
 
-	if(finn.health == 0) {
-		$(document).off(keysDown);
-		var winnerFernImage = new Image();
-		winnerFernImage.src = "pics/winnerFern2.png";
-		ctx.drawImage(winnerFernImage, 0, 0, 600, 600);
-		appendToLog("Game over! Fern is the winner");
-	
-		
-		// reset game
-		// more visuals perhaps
-	} if (fern.health == 0) {
-		$(document).off(keysDown);
-		var winnerFinnImage = new Image();
-		winnerFinnImage.src = "pics/winnerFinn2.png";
-		ctx.drawImage(winnerFinnImage, 0, 0, 600, 600); 
-		appendToLog("Game over! Finn is the winner");
-		
-		// reset game 
+	if(finn.health <= 0 || fern.health <= 0) {
+		if(finn.health <= 0) {
+//			$(canvas).off(keysDown);
+			var winnerFernImage = new Image();
+			winnerFernImage.src = "pics/winnerFern2.png";
+			ctx.drawImage(winnerFernImage, 0, 0, 600, 600);
+			if (!winnerWasFound) {
+				winnerWasFound = true;
+				appendToLog("Game over! Fern is the winner");
+				// make sure hero does not get -x% health
+				
+				// here maybe bind key (restart)
+				// to "F5"/Refresh page for reset
+			}
+		} 
+		if (fern.health <= 0) {
+//			$(canvas).off(keysDown);
+			var winnerFinnImage = new Image();
+			winnerFinnImage.src = "pics/winnerFinn2.png";
+			ctx.drawImage(winnerFinnImage, 0, 0, 600, 600); 
+			if (!winnerWasFound) {
+				winnerWasFound = true;
+				appendToLog("Game over! Finn is the winner");
+				// make sure hero does not get -x% health
+				
+				// here maybe bind key (restart)
+				// to "F5"/Refresh page for reset
+			}
+		}
 	}
+	
 	
 };
 
