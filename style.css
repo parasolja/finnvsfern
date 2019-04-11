@@ -1,6 +1,6 @@
 @font-face {
 	font-family: Adventure Time;
-	src: url(Adventure_Time.ttf);
+	src: url(font/Adventure_Time.ttf);
 }
 
 #header {
@@ -22,9 +22,6 @@ h1 {
 	margin: 0px;
 }
 
-#main {
-	min-height: 700px;
-}
 
 #buttonRow {
 	min-height: 50px;

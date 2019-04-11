@@ -449,7 +449,7 @@ var playerOnesTurn = true;
 
 var update = function (modifier) {
 
-	// hero1
+	// Finn
 	if(playerOnesTurn) {
 		if (38 in keysDown) { // Player holding up
 			if(finn.y != 0) { // hero is not at the upmost part of the map
@@ -492,11 +492,11 @@ var update = function (modifier) {
 				// do nothing, maybe a message "can't move"
 			}
 			delete keysDown[39];
-		} else if (76 in keysDown) { // Player 1 deals damage (L)
+		} else if (76 in keysDown) { // Finn attacks (L)
 			if(finn.opponentInVicinity()) {
 				/**
-				 * If the other hero (here hero2) is blocking,
-				 * hero1 attacks deal less damage (hero2 health is
+				 * If the other hero (here Fern) is blocking,
+				 * Finn attacks and deal less damage (Fern's health is
 				 * reduced less). 
 				 */
 				if(fern.isBlocking) { 
@@ -525,7 +525,7 @@ var update = function (modifier) {
 			playerOnesTurn = false;
 			steps = 0;
 		}
-	} else { // hero2 
+	} else { // Fern 
 		if (87 in keysDown) { // Player holding up
 			if(fern.y != 0) { // hero is not at the upmost part of the map
 				if(fern.getPositionAbove() < 88) {
@@ -562,11 +562,11 @@ var update = function (modifier) {
 				} 
 			} 	 
 			delete keysDown[68];
-		} else if (67 in keysDown) { // Player 2 deals damage (c)
+		} else if (67 in keysDown) { // Fern deals damage (c)
 			if(fern.opponentInVicinity()) {
 				/**
-				 * If the other hero (here hero1) is blocking,
-				 * hero2 attacks deal less damage (hero1 health is
+				 * If the other hero (here Finn) is blocking,
+				 * Fern attacks deal less damage (Finn's health is
 				 * reduced less). 
 				 */
 				if(finn.isBlocking) { 
@@ -764,42 +764,54 @@ var render = function () {
 	ctx.fillText("Finn: "  + finn.damage, 350, 10);
 	ctx.fillText("Fern: "  + fern.damage, 500, 10);
 
+	/**
+	 * GAME OVER
+	 */
+
+
+	//Finn is the winner
+	var winnerFinnReady = false;
+	var winnerFinnImage = new Image();
+	winnerFinnImage.onload = function() {
+		winnerFinnReady = true;
+	};
+	winnerFinnImage.src = "pics/winnerFinn.png";
+
+	//Fern is the winner
+	var winnerFernReady = false;
+	var winnerFernImage = new Image();
+	winnerFernImage.onload = function() {
+		winnerFernReady = true;
+	};
+	winnerFernImage.src = "pics/winnerFern.png";
+	
+	
+	
 	if(finn.health <= 0 || fern.health <= 0) {
 		if(finn.health <= 0) {
-//			$(canvas).off(keysDown);
-			var winnerFernImage = new Image();
-			winnerFernImage.src = "pics/winnerFern2.png";
+			winnerFernReady = true;
 			ctx.drawImage(winnerFernImage, 0, 0, 600, 600);
 			if (!winnerWasFound) {
 				winnerWasFound = true;
 				appendToLog("Game over! Fern is the winner");
-				// make sure hero does not get -x% health
-				
-				// here maybe bind key (restart)
-				// to "F5"/Refresh page for reset
+				keysDown[e.keyCode] = false;
 			}
 		} 
 		if (fern.health <= 0) {
-//			$(canvas).off(keysDown);
-			var winnerFinnImage = new Image();
-			winnerFinnImage.src = "pics/winnerFinn2.png";
-			ctx.drawImage(winnerFinnImage, 0, 0, 600, 600); 
+			winnerFinnReady = true;
+			ctx.drawImage(winnerFinnImage, 0, 0, 600, 600);
 			if (!winnerWasFound) {
 				winnerWasFound = true;
 				appendToLog("Game over! Finn is the winner");
-				// make sure hero does not get -x% health
+				keysDown[e.keyCode] = false;
 				
-				// here maybe bind key (restart)
-				// to "F5"/Refresh page for reset
 			}
 		}
 	}
 	
-	
 };
 
 //Game log
-
 
 function appendToLog(message) {
 	var log = document.getElementById("displayMessage");
@@ -896,9 +908,6 @@ function changeCharactersAppearance(hero, newWeapon, characterDivId, weaponFileS
 
 	}
 }
-
-
-
 
 
 // The main game loop
