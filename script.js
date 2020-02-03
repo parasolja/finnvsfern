@@ -1,32 +1,4 @@
 /**
- * Ambient
- */
-
-var x = document.getElementById("soundtrack"); 
-
-function musicOn() { 
-  x.play(); 
-} 
-
-function musicOff() { 
-  x.pause(); 
-} 
-
-/**
- * Disable arrow keys scrolling in a browser
- */
-var arrow_keys_handler = function(e) {
-    switch(e.keyCode){
-        case 37: case 39: case 38:  case 40: // Arrow keys
-        case 32: e.preventDefault(); break; // Space
-        default: break; // do not block other keys
-    }
-};
-window.addEventListener("keydown", arrow_keys_handler, false);
-
-
-
-/**
  * World/Playingfield construction
  */
 
@@ -251,7 +223,6 @@ class Hero {
 	}
 	
 	updatePosition(x,y) {
-		//peter.updateposition(20,30);
 		/**
 		 * Before updating, Check whether the old position value
 		 * was a weapon. If yes, leave a "weapon value" behind.
@@ -795,6 +766,7 @@ var render = function () {
 				winnerWasFound = true;
 				appendToLog("Game over! Fern is the winner");
 				keysDown[e.keyCode] = false;
+				document.location.reload();
 			}
 		} 
 		if (fern.health <= 0) {
@@ -804,6 +776,7 @@ var render = function () {
 				winnerWasFound = true;
 				appendToLog("Game over! Finn is the winner");
 				keysDown[e.keyCode] = false;
+				document.location.reload();
 				
 			}
 		}
@@ -909,8 +882,7 @@ function changeCharactersAppearance(hero, newWeapon, characterDivId, weaponFileS
 	}
 }
 
-
-// The main game loop
+//The main game loop
 var main = function () {
 	var now = Date.now();
 	var delta = now - then;
@@ -934,6 +906,9 @@ requestAnimationFrame = w.requestAnimationFrame ||
 var then = Date.now();
 reset();
 main();
+
+
+
 
 
 
